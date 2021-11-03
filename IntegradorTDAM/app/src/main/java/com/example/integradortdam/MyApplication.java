@@ -42,3 +42,4 @@ public class MyApplication extends Application {
         return imageLoader;
     }
 }
+

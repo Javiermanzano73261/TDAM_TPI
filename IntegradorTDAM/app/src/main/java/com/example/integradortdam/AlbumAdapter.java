@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.integradortdam.entities.AlbumModel;
+
 import java.util.List;
 
 
@@ -31,8 +33,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String name = albumModelList.get(position).getName();
-        Integer tamanio = albumModelList.get(position).getTamanio();
+        String name = albumModelList.get(position).getTitle();
+        Integer tamanio = albumModelList.get(position).getTotal();
         int imagen1 = albumModelList.get(position).getImagen1();
         int imagen2 = albumModelList.get(position).getImagen2();
         int imagen3 = albumModelList.get(position).getImagen3();

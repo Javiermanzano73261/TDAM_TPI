@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.example.integradortdam.entities.FotoModel;
+
 public class ThirdActivity extends AppCompatActivity {
     private FotoModel itemDetail;
 
