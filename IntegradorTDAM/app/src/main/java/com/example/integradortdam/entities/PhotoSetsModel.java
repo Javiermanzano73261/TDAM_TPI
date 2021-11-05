@@ -1,6 +1,6 @@
 package com.example.integradortdam.entities;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PhotoSetsModel {
     private int cancreate;
@@ -8,7 +8,7 @@ public class PhotoSetsModel {
     private int pages;
     private int perpage;
     private int total;
-    private ArrayList photoset;
+    private List<AlbumModel> photoset;
     private String stat;
 
     public int getCancreate() { return cancreate; }
@@ -26,8 +26,8 @@ public class PhotoSetsModel {
     public int getTotal() { return total; }
     public void setTotal(int total) { this.total = total; }
 
-    public ArrayList getPhotoset() { return photoset; }
-    public void setPhotoset(ArrayList photoset) { this.photoset = photoset; }
+    public List<AlbumModel> getPhotoset() { return photoset; }
+    public void setPhotoset(List<AlbumModel> photoset) { this.photoset = photoset; }
 
     public String getStat() { return stat; }
     public void setStat(String stat) { this.stat = stat; }

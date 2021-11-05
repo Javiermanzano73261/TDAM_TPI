@@ -85,6 +85,7 @@ public class MainActivity extends Activity {
                         // Display the first 500 characters of the response string.
                         text.setText("Response: " + response);
                         //showText();
+
                     }
                 }, new Response.ErrorListener() {
             @Override
