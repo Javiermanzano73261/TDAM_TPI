@@ -1,5 +1,6 @@
 package com.example.integradortdam;
 
+
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.util.LruCache;
@@ -42,4 +43,3 @@ public class MyApplication extends Application {
         return imageLoader;
     }
 }
-

@@ -2,31 +2,35 @@ package com.example.integradortdam;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import android.provider.ContactsContract;
-import android.widget.Button;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.example.integradortdam.entities.AlbumModel;
 import com.example.integradortdam.entities.PhotoSetsModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends Activity {
 
     private RecyclerView reyclerViewAlbum;
     private RecyclerView.Adapter mAdapter;
     private Button bt;
+    private TextView text;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,13 @@ public class MainActivity extends Activity {
         mAdapter = new AlbumAdapter(getAlbums());
         reyclerViewAlbum.setAdapter(mAdapter);
 
-    
+
+        text = (TextView) findViewById(R.id.txtTitulo);
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+        gson = gsonBuilder.create();
+        getApiData();
 
     }
 
@@ -64,54 +74,59 @@ public class MainActivity extends Activity {
         return albumModels;
     }
 
-
-
     private void getApiData() {
-        List<String> datos = new ArrayList<String>();
-        List<AlbumModel> albumModels = new ArrayList<>();
-        String url = "b41e94f33287aa681f0849f51762&user_id=193998612%40N06&format=json&nojsoncallback=1&auth_token=72157720820952642-2ada7b3fef1706af&api_sig=c94a95ba84b74b851ed96452f6a51c17";
+
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=051da5c34d0ba38d8aad21537bf093d5&user_id=193998612%40N06&format=json&nojsoncallback=1&auth_token=72157720821031410-e9e194b5d794641a&api_sig=835cdd0eb449cbc42ecabb0b1291b77a";
         //text.setText("");
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        if(response.length() > 0){
-                            for(int i=0; i < response.length(); i++){
-                                try {
-                                    JSONObject obj = response.getJSONObject(String.valueOf(i));
-
-                                    datos.add((String) obj.get("photoset"));
-                                    PhotoSetsModel ps = new PhotoSetsModel();
-                                    ps.setCancreate((Integer) obj.get("cancreate"));
-                                    ps.setPage((Integer) obj.get("page"));
-                                    ps.setPages((Integer) obj.get("pages"));
-                                    ps.setPerpage((Integer) obj.get("perpage"));
-                                    ps.setTotal((Integer) obj.get("total"));
-                                    ps.setPhotoset((ArrayList) obj.get("photoset"));
-                                    ps.setStat((String) obj.get("stat"));
-
-                                }
-                                catch (JSONException e){
-                                    e.printStackTrace();
-                                }
-                            }
-
-                        }
                         // Display the first 500 characters of the response string.
-                        //text.setText((CharSequence) response);
+                        text.setText("Response: " + response);
                         //showText();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //text.setText("Error: " + error.getMessage());
+                text.setText("Error: " + error.getMessage());
                 //showText();
             }
         }
         );// Add the request to the RequestQueue.
         MyApplication.getSharedQueue().add(stringRequest);
-
     }
+
+
+
+
+//ACÁ se
+    private void getApiData3() {
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=051da5c34d0ba38d8aad21537bf093d5&user_id=193998612%40N06&format=json&nojsoncallback=1&auth_token=72157720821031410-e9e194b5d794641a&api_sig=835cdd0eb449cbc42ecabb0b1291b77a";
+        StringRequest request = new StringRequest(Request.Method.GET, url, onPhotoSetsLoaded, onPhotoSetsError);
+        MyApplication.getSharedQueue().add(request);
+    }
+
+    private final Response.Listener<String> onPhotoSetsLoaded = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            List<PhotoSetsModel> photosets = Arrays.asList(gson.fromJson(response, PhotoSetsModel[].class));
+            StringBuilder builder = new StringBuilder("post size: " + photosets.size() + " posts loaded.\n");
+            for (PhotoSetsModel photoset : photosets) {
+                builder.append("photoset: " + photoset.getTotal() + ": " + photoset.getPhotoset() + "\n");
+            }
+            text.setText(builder.toString());
+            //showText();
+        }
+    };
+
+    private final Response.ErrorListener onPhotoSetsError = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            //text.setText("Error: " + error.getMessage());
+            //showText();
+        }
+    };
 
 
 
