@@ -34,7 +34,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String name = albumModelList.get(position).getTitle();
-        Integer tamanio = albumModelList.get(position).getTotal();
+        Integer tamanio = albumModelList.get(position).getCount_photos();
         int imagen1 = albumModelList.get(position).getImagen1();
         int imagen2 = albumModelList.get(position).getImagen2();
         int imagen3 = albumModelList.get(position).getImagen3();

@@ -1,14 +1,11 @@
 package com.example.integradortdam.entities;
 
 
-import android.media.Image;
-import android.widget.ImageView;
-
 public class FotoModel {
 
 
 
-
+    public FotoModel(){}
 
     public FotoModel( int imagen1) {
         //this.name = name;
@@ -17,15 +14,15 @@ public class FotoModel {
         //this.imagen3 = imagen3;
     }
 
-    private String name;
+    private String title;
     private int imagen1;
-    private int imagen2;
-    private int imagen3;
+
+    private String id;
 
 
-    public String getName() { return name; }
-    public void setName(String name) {
-        this.name = name;
+    public String getTitle() { return title; }
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getImagen1() { return imagen1; }
@@ -33,14 +30,11 @@ public class FotoModel {
         this.imagen1 = imagen1;
     }
 
-    public int getImagen2() { return imagen2; }
-    public void setImagen2(int imagen2) {
-        this.imagen2 = imagen2;
+    public String getId() { return id; }
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public int getImagen3() { return imagen3; }
-    public void setImagen3(int imagen3) {
-        this.imagen3 = imagen3;
-    }
+
 
 }

@@ -2,6 +2,7 @@ package com.example.integradortdam;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -12,16 +13,16 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.example.integradortdam.entities.AlbumModel;
+import com.example.integradortdam.entities.FotoModel;
 import com.example.integradortdam.entities.PhotoSetsModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -37,6 +38,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         reyclerViewAlbum = (RecyclerView) findViewById(R.id.reyclerViewAlbum);
 
         reyclerViewAlbum.setHasFixedSize(true);
@@ -44,7 +46,10 @@ public class MainActivity extends Activity {
         reyclerViewAlbum.setLayoutManager(new LinearLayoutManager(this));
         //reyclerViewUser.setLayoutManager(new GridLayoutManager(this, 3));
 
-        mAdapter = new AlbumAdapter(getAlbums());
+
+        PhotoSetsModel ps = getApiData();
+        //mAdapter = new AlbumAdapter(ps.getPhotoset());
+        mAdapter = new AlbumAdapter(getAlbumsMock());
         reyclerViewAlbum.setAdapter(mAdapter);
 
 
@@ -53,12 +58,12 @@ public class MainActivity extends Activity {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
-        getApiData();
+
 
     }
 
 
-    public List<AlbumModel> getAlbums() {
+    public List<AlbumModel> getAlbumsMock() {
 
         List<AlbumModel> albumModels = new ArrayList<>();
         albumModels.add(new AlbumModel("Paisajes", 50, R.drawable.imagen1, R.drawable.imagen2, R.drawable.imagen3, R.drawable.imagen4));
@@ -74,60 +79,107 @@ public class MainActivity extends Activity {
         return albumModels;
     }
 
-    private void getApiData() {
+    private PhotoSetsModel getApiData() {
 
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=051da5c34d0ba38d8aad21537bf093d5&user_id=193998612%40N06&format=json&nojsoncallback=1&auth_token=72157720821031410-e9e194b5d794641a&api_sig=835cdd0eb449cbc42ecabb0b1291b77a";
+        PhotoSetsModel ps = new PhotoSetsModel();
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=940fc8b1be297d30dfbbee4773b58dd2&user_id=193998612%40N06&format=json&nojsoncallback=1&auth_token=72157720821376221-ff146fa59c8e54b2&api_sig=92b906364ab9ff4971101ac1c3887917";
         //text.setText("");
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         // Display the first 500 characters of the response string.
-                        text.setText("Response: " + response);
-                        //showText();
+                        //text.setText(response.toString());
+                        try {
 
+                            JSONObject obj = response.getJSONObject("photosets");
+
+                            ps.setCancreate((Integer)obj.get("cancreate"));
+                            ps.setPage(obj.optInt("page"));
+                            ps.setPages(obj.optInt("pages"));
+                            ps.setPerpage(obj.optInt("perpage"));
+                            Log.d("Prueba", response.toString());
+                            ps.setTotal(obj.getInt("total"));
+
+                            JSONArray jsonarray = obj.optJSONArray("photoset");
+                            Log.d("Almbum", jsonarray.toString());
+
+                            List<AlbumModel> sets = new ArrayList<AlbumModel>();
+                            for(int i=0;i<jsonarray.length();i++){
+                                JSONObject object = jsonarray.getJSONObject(i);
+                                AlbumModel album = new AlbumModel();
+                                album.setId(object.optString("id"));
+                                album.setPrimary(object.optLong("primary"));
+                                album.setOwner(object.optString("owner"));
+                                album.setUsername(object.optString("username"));
+                                album.setDate_create(object.optInt("date_create"));
+                                JSONObject title = object.optJSONObject("title");
+                                album.setTitle(title.optString("_content"));
+                                album.setCount_photos(object.optInt("count_photos"));
+
+                                album.setPhoto(getApiPhotos(album.getId(), album.getOwner()));
+
+                            }
+                            ps.setPhotoset(sets);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 text.setText("Error: " + error.getMessage());
-                //showText();
+
             }
         }
         );// Add the request to the RequestQueue.
         MyApplication.getSharedQueue().add(stringRequest);
+        return ps;
     }
 
+    private ArrayList<FotoModel> getApiPhotos(String albumID, String ownerID){
+        ArrayList<FotoModel> fotos = new ArrayList<>();
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=940fc8b1be297d30dfbbee4773b58dd2&photoset_id="+albumID+"&user_id="+ownerID+"&format=json&nojsoncallback=1";
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d("URL", url);
+                            Log.d("JSON Photo", response.toString());
+                            JSONObject obj = response.getJSONObject("photoset");
+                            Log.d("Photo set", obj.toString());
+                            JSONArray jsonarray = obj.optJSONArray("photo");
+                            Log.d("Photo List", jsonarray.toString());
+
+                            for(int i=0;i<jsonarray.length();i++){
+                                JSONObject object = jsonarray.getJSONObject(i);
+                                FotoModel foto = new FotoModel();
+                                foto.setId(object.optString("id"));
+                                foto.setTitle(object.optString("title"));
+                                fotos.add(foto);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
 
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                text.setText("Error: " + error.getMessage());
 
-//ACÁ se
-    private void getApiData3() {
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=051da5c34d0ba38d8aad21537bf093d5&user_id=193998612%40N06&format=json&nojsoncallback=1&auth_token=72157720821031410-e9e194b5d794641a&api_sig=835cdd0eb449cbc42ecabb0b1291b77a";
-        StringRequest request = new StringRequest(Request.Method.GET, url, onPhotoSetsLoaded, onPhotoSetsError);
-        MyApplication.getSharedQueue().add(request);
-    }
-
-    private final Response.Listener<String> onPhotoSetsLoaded = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            List<PhotoSetsModel> photosets = Arrays.asList(gson.fromJson(response, PhotoSetsModel[].class));
-            StringBuilder builder = new StringBuilder("post size: " + photosets.size() + " posts loaded.\n");
-            for (PhotoSetsModel photoset : photosets) {
-                builder.append("photoset: " + photoset.getTotal() + ": " + photoset.getPhotoset() + "\n");
             }
-            text.setText(builder.toString());
-            //showText();
         }
-    };
+        );// Add the request to the RequestQueue.
+        MyApplication.getSharedQueue().add(stringRequest);
+        return fotos;
+    }
 
-    private final Response.ErrorListener onPhotoSetsError = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            //text.setText("Error: " + error.getMessage());
-            //showText();
-        }
-    };
+
 
 
 

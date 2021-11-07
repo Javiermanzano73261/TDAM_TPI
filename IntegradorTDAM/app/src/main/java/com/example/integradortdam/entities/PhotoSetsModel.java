@@ -9,7 +9,6 @@ public class PhotoSetsModel {
     private int perpage;
     private int total;
     private List<AlbumModel> photoset;
-    private String stat;
 
     public int getCancreate() { return cancreate; }
     public void setCancreate(int cancreate) { this.cancreate = cancreate; }
@@ -29,6 +28,4 @@ public class PhotoSetsModel {
     public List<AlbumModel> getPhotoset() { return photoset; }
     public void setPhotoset(List<AlbumModel> photoset) { this.photoset = photoset; }
 
-    public String getStat() { return stat; }
-    public void setStat(String stat) { this.stat = stat; }
 }
