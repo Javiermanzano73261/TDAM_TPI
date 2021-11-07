@@ -8,6 +8,8 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.example.integradortdam.entities.FotoModel;
 
 import java.util.List;
@@ -32,14 +34,7 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        //String name = fotoModelList.get(position).getName();
-        int imagen1 = fotoModelList.get(position).getImagen1();
-        //int imagen2 = fotoModelList.get(position).getImagen2();
-        //int imagen3 = fotoModelList.get(position).getImagen3();
-        //holder.name.setText(name);
-        holder.imagen1.setImageResource(imagen1);
-       // holder.imagen2.setImageResource(imagen2);
-       // holder.imagen3.setImageResource(imagen3);
+        loadImage(fotoModelList.get(position).getImageUrl(), holder.imagen1 );
 
         final FotoModel item = fotoModelList.get(position);
 
@@ -59,17 +54,28 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        //private TextView name;
         private ImageView imagen1;
-       // private ImageView imagen2;
-       // private ImageView imagen3;
         public ViewHolder(View v) {
             super(v);
-            //name = (TextView) v.findViewById(R.id.albumName);
             imagen1 = (ImageView) v.findViewById(R.id.imageName1);
-         //   imagen2 = (ImageView) v.findViewById(R.id.imageName2);
-         //   imagen3 = (ImageView) v.findViewById(R.id.imageName3);
         }
+    }
+
+    private void loadImage(String url, ImageView image) {
+        ImageLoader imageLoader = MyApplication.getImageLoader();
+
+        imageLoader.get(url, new ImageLoader.ImageListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //text.setText("Error: " + error.getMessage());
+            }
+
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
+                image.setImageBitmap(response.getBitmap());
+            }
+        });
+        ;
     }
 
 }

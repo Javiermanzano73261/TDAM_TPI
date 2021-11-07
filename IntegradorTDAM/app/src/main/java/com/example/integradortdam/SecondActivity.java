@@ -24,34 +24,31 @@ public class SecondActivity extends AppCompatActivity  {
 
     private RecyclerView reyclerViewFotos;
     private RecyclerView.Adapter mAdapter;
-    private AlbumModel itemDetail;
     private TextView text;
+    private AlbumModel item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
+        item = (AlbumModel) getIntent().getExtras().getSerializable("ItemDetail");
 
         text = (TextView) findViewById(R.id.txtTitulo);
+        text.setText(item.getTitle());
 
         reyclerViewFotos = (RecyclerView) findViewById(R.id.reyclerViewFotos);
-
         reyclerViewFotos.setHasFixedSize(true);
 
         //reyclerViewFotos.setLayoutManager(new LinearLayoutManager(this));
         reyclerViewFotos.setLayoutManager(new GridLayoutManager(this, 3));
 
-        mAdapter = new FotoAdapter(getFotos());
+        mAdapter = new FotoAdapter(item.getPhoto());
         reyclerViewFotos.setAdapter(mAdapter);
 
-        //initValues();
     }
 
-    private void initValues(){
-        itemDetail = (AlbumModel) getIntent().getExtras().getSerializable("ItemDetail");
 
-    }
 
 
 

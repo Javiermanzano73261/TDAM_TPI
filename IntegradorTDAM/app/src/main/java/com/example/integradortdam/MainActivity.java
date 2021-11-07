@@ -1,9 +1,9 @@
 package com.example.integradortdam;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,8 +16,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.integradortdam.entities.AlbumModel;
 import com.example.integradortdam.entities.FotoModel;
 import com.example.integradortdam.entities.PhotoSetsModel;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,38 +27,28 @@ public class MainActivity extends Activity {
 
     private RecyclerView reyclerViewAlbum;
     private RecyclerView.Adapter mAdapter;
-    private Button bt;
     private TextView text;
-    private Gson gson;
+    private PhotoSetsModel ps = new PhotoSetsModel();
+    private int control = 0;
+    private int completos = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getApiData();
 
         reyclerViewAlbum = (RecyclerView) findViewById(R.id.reyclerViewAlbum);
-
         reyclerViewAlbum.setHasFixedSize(true);
-
         reyclerViewAlbum.setLayoutManager(new LinearLayoutManager(this));
         //reyclerViewUser.setLayoutManager(new GridLayoutManager(this, 3));
 
-
-        PhotoSetsModel ps = getApiData();
-        //mAdapter = new AlbumAdapter(ps.getPhotoset());
-        mAdapter = new AlbumAdapter(getAlbumsMock());
-        reyclerViewAlbum.setAdapter(mAdapter);
-
-
         text = (TextView) findViewById(R.id.txtTitulo);
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
-        gson = gsonBuilder.create();
-
-
     }
+
 
 
     public List<AlbumModel> getAlbumsMock() {
@@ -79,9 +67,8 @@ public class MainActivity extends Activity {
         return albumModels;
     }
 
-    private PhotoSetsModel getApiData() {
+    private void getApiData() {
 
-        PhotoSetsModel ps = new PhotoSetsModel();
         String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=940fc8b1be297d30dfbbee4773b58dd2&user_id=193998612%40N06&format=json&nojsoncallback=1&auth_token=72157720821376221-ff146fa59c8e54b2&api_sig=92b906364ab9ff4971101ac1c3887917";
         //text.setText("");
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -103,6 +90,7 @@ public class MainActivity extends Activity {
 
                             JSONArray jsonarray = obj.optJSONArray("photoset");
                             Log.d("Almbum", jsonarray.toString());
+                            control = jsonarray.length();
 
                             List<AlbumModel> sets = new ArrayList<AlbumModel>();
                             for(int i=0;i<jsonarray.length();i++){
@@ -118,9 +106,15 @@ public class MainActivity extends Activity {
                                 album.setCount_photos(object.optInt("count_photos"));
 
                                 album.setPhoto(getApiPhotos(album.getId(), album.getOwner()));
+                                sets.add(album);
+                                Log.d("Pruebaa", "ENTREEEE");
+
+
 
                             }
+                            Log.d("SIZE", String.valueOf(sets.size()));
                             ps.setPhotoset(sets);
+
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -135,7 +129,7 @@ public class MainActivity extends Activity {
         }
         );// Add the request to the RequestQueue.
         MyApplication.getSharedQueue().add(stringRequest);
-        return ps;
+        //return ps;
     }
 
     private ArrayList<FotoModel> getApiPhotos(String albumID, String ownerID){
@@ -158,8 +152,15 @@ public class MainActivity extends Activity {
                                 FotoModel foto = new FotoModel();
                                 foto.setId(object.optString("id"));
                                 foto.setTitle(object.optString("title"));
+                                foto.setServer(object.optString("server"));
+                                foto.setSecret(object.optString("secret"));
+                                foto.setWebUrl("https://www.flickr.com/photos/"+ownerID+"/"+foto.getId());
+                                foto.setImageUrl("https://live.staticflickr.com/"+foto.getServer()+"/"+foto.getId()+"_"+foto.getSecret()+"_w.jpg");
+                                //foto.setImagen(loadImage(foto.getImageUrl()));
                                 fotos.add(foto);
                             }
+                            completos += 1;
+                            if (completos == control){actualizarUI();}
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -179,9 +180,12 @@ public class MainActivity extends Activity {
         return fotos;
     }
 
-
-
-
+    private void actualizarUI(){
+        //if(ps != null) {
+            mAdapter = new AlbumAdapter(ps.getPhotoset());
+            reyclerViewAlbum.setAdapter(mAdapter);
+        //}
+    }
 
 
 

@@ -1,6 +1,8 @@
 package com.example.integradortdam.entities;
 
 
+import android.graphics.Bitmap;
+
 public class FotoModel {
 
 
@@ -16,8 +18,16 @@ public class FotoModel {
 
     private String title;
     private int imagen1;
+    private Bitmap imagen;
 
     private String id;
+
+
+    private String server;
+    private String secret;
+    private String webUrl;
+    private String imageUrl;
+
 
 
     public String getTitle() { return title; }
@@ -26,13 +36,32 @@ public class FotoModel {
     }
 
     public int getImagen1() { return imagen1; }
-    public void setImagen1(int imagen1) {
-        this.imagen1 = imagen1;
-    }
+    public void setImagen1(int imagen1) { this.imagen1 = imagen1; }
+
+    public Bitmap getImagen() { return imagen; }
+    public void setImagen(Bitmap imagen) { this.imagen = imagen; }
 
     public String getId() { return id; }
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getServer() { return server; }
+    public void setServer(String server) { this.server = server; }
+
+    public String getSecret() { return secret; }
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public String getWebUrl() { return webUrl; }
+    public void setWebUrl(String url) {
+        this.webUrl = url;
+    }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String url) {
+        this.imageUrl = url;
     }
 
 

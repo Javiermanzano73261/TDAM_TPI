@@ -9,8 +9,12 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.example.integradortdam.entities.AlbumModel;
+import com.example.integradortdam.entities.FotoModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,28 +37,28 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String name = albumModelList.get(position).getTitle();
+        String title = albumModelList.get(position).getTitle();
         Integer tamanio = albumModelList.get(position).getCount_photos();
-        int imagen1 = albumModelList.get(position).getImagen1();
-        int imagen2 = albumModelList.get(position).getImagen2();
-        int imagen3 = albumModelList.get(position).getImagen3();
-        int imagen4 = albumModelList.get(position).getImagen4();
-        holder.name.setText(name);
+        ArrayList<FotoModel> fotos = albumModelList.get(position).getPhoto();
+        loadImage(fotos.get(0).getImageUrl(), holder.imagen1 );
+        loadImage(fotos.get(1).getImageUrl(), holder.imagen2 );
+        loadImage(fotos.get(2).getImageUrl(), holder.imagen3 );
+        loadImage(fotos.get(3).getImageUrl(), holder.imagen4 );
+        holder.name.setText(title);
         holder.tamanio.setText(tamanio.toString() + " fotos");
-        holder.imagen1.setImageResource(imagen1);
-        holder.imagen2.setImageResource(imagen2);
-        holder.imagen3.setImageResource(imagen3);
-        holder.imagen4.setImageResource(imagen4);
+
 
         final AlbumModel item = albumModelList.get(position);
+
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(holder.itemView.getContext(), SecondActivity.class);
-               intent.putExtra("ItemDetail", item);
-                holder.itemView.getContext().startActivity(intent);
 
+                intent.putExtra("ItemDetail", item);
+                holder.itemView.getContext().startActivity(intent);
 
             }
         });
@@ -86,5 +90,24 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             imagen4 = (ImageView) v.findViewById(R.id.imageName4);
         }
     }
+
+    private void loadImage(String url, ImageView image) {
+        ImageLoader imageLoader = MyApplication.getImageLoader();
+
+        imageLoader.get(url, new ImageLoader.ImageListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //text.setText("Error: " + error.getMessage());
+            }
+
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
+                image.setImageBitmap(response.getBitmap());
+            }
+        });
+;
+    }
+
+
 
 }
