@@ -23,7 +23,7 @@
         tools:layout_editor_absoluteY="-2dp" />
 
     <TextView
-        android:id="@+id/txtTitulo"
+        android:id="@+id/txtAlbum"
         android:layout_width="188dp"
         android:layout_height="54dp"
         android:shadowColor="#FFFFFF"
@@ -34,13 +34,54 @@
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="7dp" />
 
+
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/imagenId"
+        android:layout_width="match_parent"
+        android:layout_height="369dp"
         android:layout_below="@+id/spinner"
         android:layout_marginTop="10dp"
+        android:background="#F8DCE5"
         app:srcCompat="@drawable/imagen2" />
+
+    <TextView
+        android:id="@+id/txtComentarios"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imagenId"
+        android:layout_marginTop="20dp"
+        android:text="Comentarios"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/txtCantComentarios"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imagenId"
+        android:layout_toRightOf="@id/txtComentarios"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="25dp"
+        android:text="(0)"
+        android:textSize="15sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reyclerViewComentarios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtCantComentarios"
+        android:layout_marginTop="10dp" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/imagenId"
+        android:src="@android:drawable/ic_menu_send"
+        app:backgroundTint="#E91E63" />
 
 
 </RelativeLayout>

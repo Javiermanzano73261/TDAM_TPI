@@ -32,7 +32,7 @@ public class SecondActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        item = (AlbumModel) getIntent().getExtras().getSerializable("ItemDetail");
+        recibirDatos();
 
         text = (TextView) findViewById(R.id.txtTitulo);
         text.setText(item.getTitle());
@@ -48,7 +48,10 @@ public class SecondActivity extends AppCompatActivity  {
 
     }
 
-
+    private void recibirDatos(){
+        Bundle extras = getIntent().getExtras();
+        item = (AlbumModel) extras.getSerializable("AlbumClick");
+    }
 
 
 

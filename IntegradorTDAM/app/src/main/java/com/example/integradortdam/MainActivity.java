@@ -1,7 +1,6 @@
 package com.example.integradortdam;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -69,7 +68,7 @@ public class MainActivity extends Activity {
 
     private void getApiData() {
 
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=940fc8b1be297d30dfbbee4773b58dd2&user_id=193998612%40N06&format=json&nojsoncallback=1&auth_token=72157720821376221-ff146fa59c8e54b2&api_sig=92b906364ab9ff4971101ac1c3887917";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=7ae04b066fe12540605c2f10ba426a6b&user_id=193998612%40N06&format=json&nojsoncallback=1";
         //text.setText("");
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -81,7 +80,6 @@ public class MainActivity extends Activity {
 
                             JSONObject obj = response.getJSONObject("photosets");
 
-                            ps.setCancreate((Integer)obj.get("cancreate"));
                             ps.setPage(obj.optInt("page"));
                             ps.setPages(obj.optInt("pages"));
                             ps.setPerpage(obj.optInt("perpage"));
@@ -107,12 +105,8 @@ public class MainActivity extends Activity {
 
                                 album.setPhoto(getApiPhotos(album.getId(), album.getOwner()));
                                 sets.add(album);
-                                Log.d("Pruebaa", "ENTREEEE");
-
-
 
                             }
-                            Log.d("SIZE", String.valueOf(sets.size()));
                             ps.setPhotoset(sets);
 
 
@@ -123,18 +117,16 @@ public class MainActivity extends Activity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                text.setText("Error: " + error.getMessage());
 
             }
         }
         );// Add the request to the RequestQueue.
         MyApplication.getSharedQueue().add(stringRequest);
-        //return ps;
     }
 
     private ArrayList<FotoModel> getApiPhotos(String albumID, String ownerID){
         ArrayList<FotoModel> fotos = new ArrayList<>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=940fc8b1be297d30dfbbee4773b58dd2&photoset_id="+albumID+"&user_id="+ownerID+"&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=7ae04b066fe12540605c2f10ba426a6b&photoset_id="+albumID+"&user_id="+ownerID+"&format=json&nojsoncallback=1";
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override

@@ -30,8 +30,8 @@
 
     <TextView
         android:id="@+id/txtTitulo"
-        android:layout_width="188dp"
-        android:layout_height="54dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:shadowColor="#FFFFFF"
         android:text="Fotos"
         android:textColor="#FFFFFF"

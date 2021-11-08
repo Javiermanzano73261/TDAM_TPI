@@ -2,10 +2,10 @@ package com.example.integradortdam.entities;
 
 
 import android.graphics.Bitmap;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-public class FotoModel {
-
-
+public class FotoModel implements Serializable {
 
     public FotoModel(){}
 
@@ -19,7 +19,7 @@ public class FotoModel {
     private String title;
     private int imagen1;
     private Bitmap imagen;
-
+    private ArrayList<ComentarioModel> comentarios;
     private String id;
 
 
@@ -63,6 +63,9 @@ public class FotoModel {
     public void setImageUrl(String url) {
         this.imageUrl = url;
     }
+
+    public ArrayList<ComentarioModel> getComentarios() { return comentarios; }
+    public void setComentarios(ArrayList<ComentarioModel> comentarios) { this.comentarios = comentarios; }
 
 
 

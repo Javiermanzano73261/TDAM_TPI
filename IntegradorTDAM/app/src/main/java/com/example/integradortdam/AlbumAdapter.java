@@ -37,9 +37,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String title = albumModelList.get(position).getTitle();
-        Integer tamanio = albumModelList.get(position).getCount_photos();
-        ArrayList<FotoModel> fotos = albumModelList.get(position).getPhoto();
+        final AlbumModel item = albumModelList.get(position);
+        String title = item.getTitle();
+        Integer tamanio = item.getCount_photos();
+        ArrayList<FotoModel> fotos = item.getPhoto();
         loadImage(fotos.get(0).getImageUrl(), holder.imagen1 );
         loadImage(fotos.get(1).getImageUrl(), holder.imagen2 );
         loadImage(fotos.get(2).getImageUrl(), holder.imagen3 );
@@ -48,7 +49,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
         holder.tamanio.setText(tamanio.toString() + " fotos");
 
 
-        final AlbumModel item = albumModelList.get(position);
+
 
 
 
@@ -57,7 +58,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             public void onClick(View v) {
                 Intent intent = new Intent(holder.itemView.getContext(), SecondActivity.class);
 
-                intent.putExtra("ItemDetail", item);
+                intent.putExtra("AlbumClick", item);
                 holder.itemView.getContext().startActivity(intent);
 
             }

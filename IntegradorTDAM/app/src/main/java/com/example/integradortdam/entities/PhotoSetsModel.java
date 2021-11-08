@@ -3,15 +3,13 @@ package com.example.integradortdam.entities;
 import java.util.List;
 
 public class PhotoSetsModel {
-    private int cancreate;
+
     private int page;
     private int pages;
     private int perpage;
     private int total;
     private List<AlbumModel> photoset;
 
-    public int getCancreate() { return cancreate; }
-    public void setCancreate(int cancreate) { this.cancreate = cancreate; }
 
     public int getPage() { return page; }
     public void setPage(int page) { this.page = page; }

@@ -34,15 +34,16 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        loadImage(fotoModelList.get(position).getImageUrl(), holder.imagen1 );
-
         final FotoModel item = fotoModelList.get(position);
+        loadImage(item.getImageUrl(), holder.imagen1 );
+
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(holder.itemView.getContext(), ThirdActivity.class);
-                //intent.putExtra("ItemDetail2", item);
+                intent.putExtra("FotoClick", item);
                 holder.itemView.getContext().startActivity(intent);
             }
         });
