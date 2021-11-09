@@ -1,8 +1,14 @@
 package com.example.integradortdam.entities;
 
+
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@Entity(tableName = "album_table")
 public class AlbumModel implements Serializable {
 
 
@@ -24,14 +30,18 @@ public class AlbumModel implements Serializable {
     private int imagen3;
     private int imagen4;
 
+    @PrimaryKey
+    @NonNull
     private String id;
     private long primary;
     private String owner;
     private String username;
     private int date_create;
     private String title;
+    private String ownername;
 
-    private ArrayList photo;
+
+    private ArrayList<FotoModel> photo;
     private int count_photos;
 
 
@@ -55,8 +65,9 @@ public class AlbumModel implements Serializable {
         this.imagen4 = imagen4;
     }
 
+    @NonNull
     public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public void setId(@NonNull String id) { this.id = id; }
 
     public long getPrimary() { return primary; }
     public void setPrimary(long primary) { this.primary = primary; }
@@ -79,5 +90,8 @@ public class AlbumModel implements Serializable {
 
     public int getDate_create() { return date_create; }
     public void setDate_create(int date_create) { this.date_create = date_create; }
+
+    public String getOwnername() { return ownername; }
+    public void setOwnername(String ownername) { this.ownername = ownername; }
 
 }

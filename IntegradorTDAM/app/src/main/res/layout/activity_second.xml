@@ -28,6 +28,17 @@
         tools:layout_editor_absoluteX="-6dp"
         tools:layout_editor_absoluteY="-2dp" />
 
+    <Spinner
+        android:id="@+id/spinnerOrdenar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        android:background="#E91E63"
+        android:focusable="auto"
+        android:foreground="@drawable/icon" />
+
     <TextView
         android:id="@+id/txtTitulo"
         android:layout_width="match_parent"

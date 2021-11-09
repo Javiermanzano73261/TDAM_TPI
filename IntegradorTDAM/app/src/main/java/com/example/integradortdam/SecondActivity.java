@@ -1,24 +1,23 @@
 package com.example.integradortdam;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.integradortdam.entities.AlbumModel;
 import com.example.integradortdam.entities.FotoModel;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class SecondActivity extends AppCompatActivity  {
 
@@ -43,9 +42,14 @@ public class SecondActivity extends AppCompatActivity  {
         //reyclerViewFotos.setLayoutManager(new LinearLayoutManager(this));
         reyclerViewFotos.setLayoutManager(new GridLayoutManager(this, 3));
 
-        mAdapter = new FotoAdapter(item.getPhoto());
-        reyclerViewFotos.setAdapter(mAdapter);
+        actualizarUI(item.getPhoto());
+        cargarMenuOpciones();
 
+    }
+
+    private void actualizarUI(ArrayList<FotoModel> fotos){
+        mAdapter = new FotoAdapter(fotos);
+        reyclerViewFotos.setAdapter(mAdapter);
     }
 
     private void recibirDatos(){
@@ -53,8 +57,62 @@ public class SecondActivity extends AppCompatActivity  {
         item = (AlbumModel) extras.getSerializable("AlbumClick");
     }
 
+    private ArrayList<FotoModel> ordenarXAZ(){
+        ArrayList<FotoModel> list = (ArrayList<FotoModel>) item.getPhoto().clone();
+        Collections.sort(list, new Comparator<FotoModel>() {
+            @Override
+            public int compare(FotoModel obj1, FotoModel obj2) {
+                return obj1.getTitle().compareTo(obj2.getTitle());
+            }
+        });
+        return list;
+    }
+
+    private ArrayList<FotoModel> ordenarXantiguedad(){
+        ArrayList<FotoModel> list = (ArrayList<FotoModel>) item.getPhoto().clone();
+        Collections.reverse(list);
+        return list;
+    }
+
+    private void cargarMenuOpciones(){
+        ArrayList<String> opciones = new ArrayList<>();
+        opciones.add("Ordenar A-Z");
+        opciones.add("Ordenar más nuevo primero");
+        opciones.add("Ordenar más antiguo primero");
+
+        ArrayAdapter adp = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, opciones);
+
+        //ImageView icon = findViewById(R.id.imageOrdenar);
+        Spinner mSpinner= findViewById(R.id.spinnerOrdenar);
+        mSpinner.setAdapter(adp);
+
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String opcion = (String)  mSpinner.getAdapter().getItem(position);
+
+                if(opcion == "Ordenar A-Z"){
+                    actualizarUI(ordenarXAZ());
+                }
+                else if(opcion == "Ordenar más nuevo primero"){
+                    actualizarUI(ordenarXantiguedad());
+                }
+                else if(opcion == "Ordenar más antiguo primero"){
+                    actualizarUI(item.getPhoto());
+                }
+                Toast.makeText(SecondActivity.this, "Seleccionaste "+ opcion, Toast.LENGTH_SHORT).show();
+                }
 
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Toast.makeText(SecondActivity.this, "No hay selección de filtro", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+/*
     public List<FotoModel> getFotos() {
 
         List<FotoModel> fotoModels = new ArrayList<>();
@@ -67,7 +125,9 @@ public class SecondActivity extends AppCompatActivity  {
 
         return fotoModels;
     }
+ */
 
+    /*
     private void getApiData() {
 
         String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=2b7ab41e94f33287aa681f0849f51762&photoset_id=72157720113238557&user_id=193998612%40N06&format=json&nojsoncallback=1&auth_token=72157720820952642-2ada7b3fef1706af&api_sig=a725a5c965af93eed6abfda5ce9d6813";
@@ -80,18 +140,13 @@ public class SecondActivity extends AppCompatActivity  {
                             for(int i=0; i < response.length(); i++){
                                 try {
                                     JSONObject obj = response.getJSONObject(String.valueOf(i));
-                                    Album a = new Album();
-                                    a.setId((long) obj.get("id"));
-                                    a.setPrimary((String) obj.get("primary"));
+                                    AlbumModel a = new AlbumModel();
+                                    a.setId((String) obj.get("id"));
+                                    a.setPrimary((long) obj.get("primary"));
                                     a.setOwner((String) obj.get("owner"));
                                     a.setOwnername((String) obj.get("ownername"));
                                     a.setPhoto((ArrayList) obj.get("photo"));
-                                    a.setPage((Integer) obj.get("page"));
-                                    a.setPer_page((Integer) obj.get("per_page"));
-                                    a.setPages((Integer) obj.get("pages"));
                                     a.setTitle((String) obj.get("title"));
-                                    a.setTotal((Integer) obj.get("total"));
-                                    a.setStat((String) obj.get("stat"));
                                 }
                                 catch (JSONException e){
                                     e.printStackTrace();
@@ -113,7 +168,7 @@ public class SecondActivity extends AppCompatActivity  {
         );// Add the request to the RequestQueue.
         MyApplication.getSharedQueue().add(stringRequest);
     }
-    
+    */
 
 
 

@@ -2,9 +2,15 @@ package com.example.integradortdam.entities;
 
 
 import android.graphics.Bitmap;
+
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@Entity(tableName = "foto_table")
 public class FotoModel implements Serializable {
 
     public FotoModel(){}
@@ -20,6 +26,8 @@ public class FotoModel implements Serializable {
     private int imagen1;
     private Bitmap imagen;
     private ArrayList<ComentarioModel> comentarios;
+    @PrimaryKey
+    @NonNull
     private String id;
 
 
@@ -41,8 +49,9 @@ public class FotoModel implements Serializable {
     public Bitmap getImagen() { return imagen; }
     public void setImagen(Bitmap imagen) { this.imagen = imagen; }
 
+    @NonNull
     public String getId() { return id; }
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -66,6 +75,8 @@ public class FotoModel implements Serializable {
 
     public ArrayList<ComentarioModel> getComentarios() { return comentarios; }
     public void setComentarios(ArrayList<ComentarioModel> comentarios) { this.comentarios = comentarios; }
+
+
 
 
 

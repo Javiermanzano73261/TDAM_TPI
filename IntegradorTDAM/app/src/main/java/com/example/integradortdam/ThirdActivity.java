@@ -1,7 +1,6 @@
 package com.example.integradortdam;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,18 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.integradortdam.entities.ComentarioModel;
 import com.example.integradortdam.entities.FotoModel;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 
 public class ThirdActivity extends AppCompatActivity {
@@ -41,12 +31,14 @@ public class ThirdActivity extends AppCompatActivity {
         cantidad = (TextView) findViewById(R.id.txtCantComentarios);
 
         loadImage();
-        getApiComent();
+        //getApiComent();
 
         reyclerViewComentarios = (RecyclerView) findViewById(R.id.reyclerViewComentarios);
         reyclerViewComentarios.setHasFixedSize(true);
 
         reyclerViewComentarios.setLayoutManager(new LinearLayoutManager(this));
+
+        cargarComentarios();
 
 
     }
@@ -73,15 +65,17 @@ public class ThirdActivity extends AppCompatActivity {
     }
 
     private void cargarComentarios(){
-        mAdapter = new ComentarioAdapter(item.getComentarios());
-        reyclerViewComentarios.setAdapter(mAdapter);
-        String st = String.valueOf(item.getComentarios().size());
-        cantidad.setText("("+st+")");
+        if(item.getComentarios().size() != 0) {
+            mAdapter = new ComentarioAdapter(item.getComentarios());
+            reyclerViewComentarios.setAdapter(mAdapter);
+            String st = String.valueOf(item.getComentarios().size());
+            cantidad.setText("(" + st + ")");
+        }
     }
-
+/*
     private void getApiComent() {
 
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=7ae04b066fe12540605c2f10ba426a6b&photo_id="+item.getId()+"&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=9c3a294665a3de8e2d3bcc06f6679760&photo_id="+item.getId()+"&format=json&nojsoncallback=1";
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -94,7 +88,7 @@ public class ThirdActivity extends AppCompatActivity {
                             Log.d("Prueba", response.toString());
 
                             JSONArray jsonarray = obj.optJSONArray("comment");
-                            Log.d("Comentarios", jsonarray.toString());
+                            //Log.d("Comentarios", jsonarray.toString());
 
                             ArrayList<ComentarioModel> coments = new ArrayList<ComentarioModel>();
                             for(int i=0;i<jsonarray.length();i++){
@@ -105,6 +99,7 @@ public class ThirdActivity extends AppCompatActivity {
                                 comentario.set_content(object.optString("_content"));
                                 coments.add(comentario);
                             }
+
                             item.setComentarios(coments);
                             cargarComentarios();
 
@@ -122,7 +117,7 @@ public class ThirdActivity extends AppCompatActivity {
         );// Add the request to the RequestQueue.
         MyApplication.getSharedQueue().add(stringRequest);
         //return ps;
-    }
+    }*/
 
 
 
