@@ -19,8 +19,12 @@ import java.util.List;
 public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
 
     private List<FotoModel> fotoModelList;
+    private AppRepository mRepository;
 
-    public FotoAdapter(List<FotoModel> fotoModelList) { this.fotoModelList = fotoModelList; }
+    public FotoAdapter(List<FotoModel> fotoModelList, AppRepository repository) {
+        this.fotoModelList = fotoModelList;
+        this.mRepository = repository;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

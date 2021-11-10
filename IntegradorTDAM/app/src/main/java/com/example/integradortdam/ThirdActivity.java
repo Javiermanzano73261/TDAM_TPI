@@ -10,20 +10,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.example.integradortdam.entities.ComentarioModel;
 import com.example.integradortdam.entities.FotoModel;
+
+import java.util.ArrayList;
 
 
 public class ThirdActivity extends AppCompatActivity {
 
     private FotoModel item;
+    private ArrayList<ComentarioModel> comentarios;
     private ImageView imagen;
     private TextView cantidad;
     private RecyclerView reyclerViewComentarios;
     private RecyclerView.Adapter mAdapter;
+    private AppRepository mRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.mRepository = new AppRepository(this.getApplication());
         setContentView(R.layout.activity_third);
 
         recibirDatos();
@@ -37,15 +43,16 @@ public class ThirdActivity extends AppCompatActivity {
         reyclerViewComentarios.setHasFixedSize(true);
 
         reyclerViewComentarios.setLayoutManager(new LinearLayoutManager(this));
-
         cargarComentarios();
-
-
     }
 
     private void recibirDatos(){
         Bundle extras = getIntent().getExtras();
         item = (FotoModel) extras.getSerializable("FotoClick");
+        try {
+            comentarios = (ArrayList<ComentarioModel>) mRepository.ComentariosDeFoto(item.getId());
+        }
+        catch (Exception e) { e.printStackTrace();}
     }
 
     private void loadImage() {
@@ -65,10 +72,10 @@ public class ThirdActivity extends AppCompatActivity {
     }
 
     private void cargarComentarios(){
-        if(item.getComentarios().size() != 0) {
-            mAdapter = new ComentarioAdapter(item.getComentarios());
+        if(comentarios.size() != 0) {
+            mAdapter = new ComentarioAdapter(comentarios);
             reyclerViewComentarios.setAdapter(mAdapter);
-            String st = String.valueOf(item.getComentarios().size());
+            String st = String.valueOf(comentarios.size());
             cantidad.setText("(" + st + ")");
         }
     }

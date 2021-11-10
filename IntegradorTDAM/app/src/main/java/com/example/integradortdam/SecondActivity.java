@@ -25,10 +25,13 @@ public class SecondActivity extends AppCompatActivity  {
     private RecyclerView.Adapter mAdapter;
     private TextView text;
     private AlbumModel item;
+    private ArrayList<FotoModel> fotos;
+    private AppRepository mRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.mRepository = new AppRepository(this.getApplication());
         setContentView(R.layout.activity_second);
 
         recibirDatos();
@@ -42,23 +45,26 @@ public class SecondActivity extends AppCompatActivity  {
         //reyclerViewFotos.setLayoutManager(new LinearLayoutManager(this));
         reyclerViewFotos.setLayoutManager(new GridLayoutManager(this, 3));
 
-        actualizarUI(item.getPhoto());
+        actualizarUI(fotos);
         cargarMenuOpciones();
 
     }
 
     private void actualizarUI(ArrayList<FotoModel> fotos){
-        mAdapter = new FotoAdapter(fotos);
+        mAdapter = new FotoAdapter(fotos, mRepository);
         reyclerViewFotos.setAdapter(mAdapter);
     }
 
     private void recibirDatos(){
         Bundle extras = getIntent().getExtras();
         item = (AlbumModel) extras.getSerializable("AlbumClick");
+
+        try { fotos = (ArrayList<FotoModel>) mRepository.fotosDeAlbum(item.getId(), item.getOwner()); }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     private ArrayList<FotoModel> ordenarXAZ(){
-        ArrayList<FotoModel> list = (ArrayList<FotoModel>) item.getPhoto().clone();
+        ArrayList<FotoModel> list = (ArrayList<FotoModel>) fotos.clone();
         Collections.sort(list, new Comparator<FotoModel>() {
             @Override
             public int compare(FotoModel obj1, FotoModel obj2) {
@@ -69,7 +75,7 @@ public class SecondActivity extends AppCompatActivity  {
     }
 
     private ArrayList<FotoModel> ordenarXantiguedad(){
-        ArrayList<FotoModel> list = (ArrayList<FotoModel>) item.getPhoto().clone();
+        ArrayList<FotoModel> list = (ArrayList<FotoModel>) fotos.clone();
         Collections.reverse(list);
         return list;
     }
@@ -98,7 +104,7 @@ public class SecondActivity extends AppCompatActivity  {
                     actualizarUI(ordenarXantiguedad());
                 }
                 else if(opcion == "Ordenar más antiguo primero"){
-                    actualizarUI(item.getPhoto());
+                    actualizarUI(fotos);
                 }
                 Toast.makeText(SecondActivity.this, "Seleccionaste "+ opcion, Toast.LENGTH_SHORT).show();
                 }
@@ -110,6 +116,8 @@ public class SecondActivity extends AppCompatActivity  {
             }
         });
     }
+
+    public void setFotos(ArrayList<FotoModel> fotos) { this.fotos = fotos; }
 
 
 /*

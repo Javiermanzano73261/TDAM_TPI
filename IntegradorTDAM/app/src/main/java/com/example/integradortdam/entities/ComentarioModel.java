@@ -2,11 +2,17 @@ package com.example.integradortdam.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "comentario_table")
+import static androidx.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "comentario_table", foreignKeys = @ForeignKey(entity = FotoModel.class,
+        parentColumns = "id",
+        childColumns = "fotoId",
+        onDelete = CASCADE))
 public class ComentarioModel implements Serializable {
 
     private String _content;
@@ -15,6 +21,7 @@ public class ComentarioModel implements Serializable {
     @PrimaryKey
     @NonNull
     private String id;
+    private String fotoId;
 
 
     public String get_content() { return _content; }
@@ -26,6 +33,9 @@ public class ComentarioModel implements Serializable {
     @NonNull
     public String getId() { return id; }
     public void setId(@NonNull String id) { this.id = id; }
+
+    public String getFotoId() { return fotoId; }
+    public void setFotoId(String fotoId) { this.fotoId = fotoId; }
 
 
 

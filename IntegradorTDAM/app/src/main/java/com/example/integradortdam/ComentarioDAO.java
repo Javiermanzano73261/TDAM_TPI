@@ -1,6 +1,5 @@
 package com.example.integradortdam;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -18,8 +17,15 @@ public interface ComentarioDAO {
     // Always holds/caches latest version of data. Notifies its active observers when the
     // data has changed. Since we are getting all the contents of the database,
     // we are notified whenever any of the database contents have changed.
+
+    //@Query("SELECT * FROM comentario_table")
+    //LiveData<List<ComentarioModel>> getComentarios();
+
     @Query("SELECT * FROM comentario_table")
-    LiveData<List<ComentarioModel>> getComentarios();
+    List<ComentarioModel> getAllComentarios();
+
+    @Query("SELECT * FROM comentario_table WHERE fotoId=:fotoId")
+    List<ComentarioModel> getComentariosDeFoto(final String fotoId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(ComentarioModel comentario);

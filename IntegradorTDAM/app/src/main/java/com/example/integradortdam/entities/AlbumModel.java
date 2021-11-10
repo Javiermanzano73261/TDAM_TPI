@@ -6,7 +6,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 @Entity(tableName = "album_table")
 public class AlbumModel implements Serializable {
@@ -39,9 +38,7 @@ public class AlbumModel implements Serializable {
     private int date_create;
     private String title;
     private String ownername;
-
-
-    private ArrayList<FotoModel> photo;
+    //private ArrayList<FotoModel> photo;
     private int count_photos;
 
 
@@ -78,9 +75,11 @@ public class AlbumModel implements Serializable {
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
-    public ArrayList getPhoto() { return photo; }
-    public void setPhoto(ArrayList photo) { this.photo = photo; }
+    /*
+    public ArrayList<FotoModel> getPhoto() { return photo; }
+    public void setPhoto(ArrayList<FotoModel> photo) { this.photo = photo; }
 
+     */
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }

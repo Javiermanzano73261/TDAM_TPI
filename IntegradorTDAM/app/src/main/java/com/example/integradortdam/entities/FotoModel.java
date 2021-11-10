@@ -1,34 +1,36 @@
 package com.example.integradortdam.entities;
 
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
-@Entity(tableName = "foto_table")
+import static androidx.room.ForeignKey.CASCADE;
+
+
+
+@Entity(tableName = "foto_table", foreignKeys = @ForeignKey(entity = AlbumModel.class,
+        parentColumns = "id",
+        childColumns = "albumId",
+        onDelete = CASCADE))
 public class FotoModel implements Serializable {
 
     public FotoModel(){}
 
     public FotoModel( int imagen1) {
-        //this.name = name;
         this.imagen1 = imagen1;
-        //this.imagen2 = imagen2;
-        //this.imagen3 = imagen3;
     }
 
     private String title;
     private int imagen1;
-    private Bitmap imagen;
-    private ArrayList<ComentarioModel> comentarios;
+    //private ArrayList<ComentarioModel> comentarios;
     @PrimaryKey
     @NonNull
     private String id;
+    private String albumId;
 
 
     private String server;
@@ -46,8 +48,6 @@ public class FotoModel implements Serializable {
     public int getImagen1() { return imagen1; }
     public void setImagen1(int imagen1) { this.imagen1 = imagen1; }
 
-    public Bitmap getImagen() { return imagen; }
-    public void setImagen(Bitmap imagen) { this.imagen = imagen; }
 
     @NonNull
     public String getId() { return id; }
@@ -72,9 +72,15 @@ public class FotoModel implements Serializable {
     public void setImageUrl(String url) {
         this.imageUrl = url;
     }
-
+/*
     public ArrayList<ComentarioModel> getComentarios() { return comentarios; }
     public void setComentarios(ArrayList<ComentarioModel> comentarios) { this.comentarios = comentarios; }
+
+ */
+
+    public String getAlbumId() { return albumId; }
+    public void setAlbumId(String albumId) { this.albumId = albumId; }
+
 
 
 

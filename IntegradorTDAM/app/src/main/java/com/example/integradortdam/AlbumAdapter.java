@@ -18,13 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
 
     private List<AlbumModel> albumModelList;
+    private AppRepository mRepository;
 
-    public AlbumAdapter(List<AlbumModel> albumModelList) {
+
+
+    public AlbumAdapter(List<AlbumModel> albumModelList, AppRepository repository) {
         this.albumModelList = albumModelList;
+        this.mRepository = repository;
     }
 
     @Override
@@ -40,24 +43,26 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
         final AlbumModel item = albumModelList.get(position);
         String title = item.getTitle();
         Integer tamanio = item.getCount_photos();
-        ArrayList<FotoModel> fotos = item.getPhoto();
-        loadImage(fotos.get(0).getImageUrl(), holder.imagen1 );
-        loadImage(fotos.get(1).getImageUrl(), holder.imagen2 );
-        loadImage(fotos.get(2).getImageUrl(), holder.imagen3 );
-        loadImage(fotos.get(3).getImageUrl(), holder.imagen4 );
+        ArrayList<FotoModel> fotos = null;
+
+        try { fotos = (ArrayList<FotoModel>) mRepository.fotosDeAlbum(item.getId(), item.getOwner()); }
+        catch (Exception e) { e.printStackTrace();}
+
+        //ArrayList<FotoModel> fotos = item.getPhoto();
+        if(fotos.size()>3){
+            loadImage(fotos.get(0).getImageUrl(), holder.imagen1 );
+            loadImage(fotos.get(1).getImageUrl(), holder.imagen2 );
+            loadImage(fotos.get(2).getImageUrl(), holder.imagen3 );
+            loadImage(fotos.get(3).getImageUrl(), holder.imagen4 );
+        }
         holder.name.setText(title);
         holder.tamanio.setText(tamanio.toString() + " fotos");
-
-
-
-
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(holder.itemView.getContext(), SecondActivity.class);
-
                 intent.putExtra("AlbumClick", item);
                 holder.itemView.getContext().startActivity(intent);
 
