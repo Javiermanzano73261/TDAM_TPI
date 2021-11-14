@@ -22,7 +22,7 @@ import java.util.Comparator;
 public class SecondActivity extends AppCompatActivity  {
 
     private RecyclerView reyclerViewFotos;
-    private RecyclerView.Adapter mAdapter;
+    private FotoAdapter mAdapter;
     private TextView text;
     private AlbumModel item;
     private ArrayList<FotoModel> fotos;
@@ -32,6 +32,7 @@ public class SecondActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mRepository = new AppRepository(this.getApplication());
+        mRepository.setSecondActivity(this);
         setContentView(R.layout.activity_second);
 
         recibirDatos();
@@ -45,14 +46,17 @@ public class SecondActivity extends AppCompatActivity  {
         //reyclerViewFotos.setLayoutManager(new LinearLayoutManager(this));
         reyclerViewFotos.setLayoutManager(new GridLayoutManager(this, 3));
 
-        actualizarUI(fotos);
+        mAdapter = new FotoAdapter(fotos, mRepository);
+        reyclerViewFotos.setAdapter(mAdapter);
+
+        //actualizarUI(fotos);
         cargarMenuOpciones();
 
     }
 
-    private void actualizarUI(ArrayList<FotoModel> fotos){
-        mAdapter = new FotoAdapter(fotos, mRepository);
-        reyclerViewFotos.setAdapter(mAdapter);
+    public void actualizarUI(ArrayList<FotoModel> fotos){
+        mAdapter.setFotoModelList(fotos);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void recibirDatos(){
@@ -82,9 +86,9 @@ public class SecondActivity extends AppCompatActivity  {
 
     private void cargarMenuOpciones(){
         ArrayList<String> opciones = new ArrayList<>();
-        opciones.add("Ordenar A-Z");
-        opciones.add("Ordenar más nuevo primero");
-        opciones.add("Ordenar más antiguo primero");
+        opciones.add(getString(R.string.orderbyOld));
+        opciones.add(getString(R.string.orderbyNew));
+        opciones.add(getString(R.string.orderbyAZ));
 
         ArrayAdapter adp = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, opciones);
 
@@ -97,22 +101,22 @@ public class SecondActivity extends AppCompatActivity  {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String opcion = (String)  mSpinner.getAdapter().getItem(position);
 
-                if(opcion == "Ordenar A-Z"){
+                if(opcion == getString(R.string.orderbyAZ)){
                     actualizarUI(ordenarXAZ());
                 }
-                else if(opcion == "Ordenar más nuevo primero"){
+                else if(opcion == getString(R.string.orderbyNew)){
                     actualizarUI(ordenarXantiguedad());
                 }
-                else if(opcion == "Ordenar más antiguo primero"){
+                else if(opcion == getString(R.string.orderbyOld)){
                     actualizarUI(fotos);
                 }
-                Toast.makeText(SecondActivity.this, "Seleccionaste "+ opcion, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SecondActivity.this, getString(R.string.toast) + opcion, Toast.LENGTH_SHORT).show();
                 }
 
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                Toast.makeText(SecondActivity.this, "No hay selección de filtro", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SecondActivity.this, getString(R.string.errorToast), Toast.LENGTH_SHORT).show();
             }
         });
     }

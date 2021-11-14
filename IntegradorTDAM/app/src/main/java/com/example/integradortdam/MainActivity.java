@@ -21,7 +21,7 @@ import java.util.Comparator;
 public class MainActivity extends Activity {
 
     private RecyclerView reyclerViewAlbum;
-    private RecyclerView.Adapter mAdapter;
+    private AlbumAdapter mAdapter;
     private TextView text;
     private ArrayList<AlbumModel> sets;
     private int control = 0;
@@ -45,6 +45,10 @@ public class MainActivity extends Activity {
         reyclerViewAlbum.setLayoutManager(new LinearLayoutManager(this));
         //reyclerViewUser.setLayoutManager(new GridLayoutManager(this, 3));
 
+
+        mAdapter = new AlbumAdapter(sets, mRepository);
+        reyclerViewAlbum.setAdapter(mAdapter);
+
         cargarMenuOpciones();
         actualizarUI(sets);
 
@@ -53,9 +57,9 @@ public class MainActivity extends Activity {
 
     private void cargarMenuOpciones(){
         ArrayList<String> opciones = new ArrayList<>();
-        opciones.add("Ordenar A-Z");
-        opciones.add("Ordenar más nuevo primero");
-        opciones.add("Ordenar más antiguo primero");
+        opciones.add(getString(R.string.orderbyNew));
+        opciones.add(getString(R.string.orderbyOld));
+        opciones.add(getString(R.string.orderbyAZ));
 
         ArrayAdapter adp = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, opciones);
 
@@ -69,16 +73,17 @@ public class MainActivity extends Activity {
                 String opcion = (String)  mSpinner.getAdapter().getItem(position);
 
                 if(cargaCompleta){
-                    if(opcion == "Ordenar A-Z"){
+                    if(opcion == getString(R.string.orderbyAZ)){
                         actualizarUI(ordenarXAZ());
                     }
-                    else if(opcion == "Ordenar más nuevo primero"){
+                    else if(opcion == getString(R.string.orderbyNew)){
                         actualizarUI(sets);
                     }
-                    else if(opcion == "Ordenar más antiguo primero"){
+                    else if(opcion == getString(R.string.orderbyOld)){
                         actualizarUI(ordenarXantiguedad());
                     }
                 }
+                Toast.makeText(MainActivity.this, getString(R.string.toast) + opcion, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -119,8 +124,8 @@ public class MainActivity extends Activity {
 
 
     private void actualizarUI(ArrayList<AlbumModel> sets){
-        mAdapter = new AlbumAdapter(sets, mRepository);
-        reyclerViewAlbum.setAdapter(mAdapter);
+        mAdapter.setAlbumModelList(sets);
+        mAdapter.notifyDataSetChanged();
     }
 
 

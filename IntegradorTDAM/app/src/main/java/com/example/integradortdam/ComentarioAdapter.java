@@ -13,6 +13,7 @@ import java.util.List;
 
 public class ComentarioAdapter extends RecyclerView.Adapter<ComentarioAdapter.ViewHolder>{
 
+
     private List<ComentarioModel> comentarioModelList;
 
     public ComentarioAdapter(List<ComentarioModel> comentarioModelList) { this.comentarioModelList = comentarioModelList; }
@@ -46,6 +47,10 @@ public class ComentarioAdapter extends RecyclerView.Adapter<ComentarioAdapter.Vi
             user = (TextView) v.findViewById(R.id.txtUser);
             coment = (TextView) v.findViewById(R.id.txtComentario);
         }
+    }
+
+    public void setComentarioModelList(List<ComentarioModel> comentarioModelList) {
+        this.comentarioModelList = comentarioModelList;
     }
 
 

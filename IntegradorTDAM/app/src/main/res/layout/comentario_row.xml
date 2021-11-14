@@ -5,14 +5,13 @@
 
     <TextView
         android:id="@+id/txtUser"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:singleLine="true"
-        android:text="Usuario XXXX "
-        android:textColor="#000000"
-        android:textSize="15dp"
+        android:textColor="@color/black"
+        android:textSize="22sp"
         android:textStyle="bold" />
 
     <TextView
@@ -21,10 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:singleLine="true"
-        android:text="Linda foto"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:layout_below="@id/txtUser"
-        android:textSize="15dp" />
+        android:textSize="22sp" />
 
 
 

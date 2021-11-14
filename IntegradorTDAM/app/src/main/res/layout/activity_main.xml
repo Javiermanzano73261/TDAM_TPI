@@ -15,8 +15,7 @@
         android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="#000000"
-        android:backgroundTint="#000000"
+        android:background="@color/black"
         tools:layout_editor_absoluteX="-6dp"
         tools:layout_editor_absoluteY="-2dp" />
 
@@ -36,9 +35,9 @@
         android:layout_width="188dp"
         android:layout_height="54dp"
         android:layout_marginRight="60dp"
-        android:shadowColor="#FFFFFF"
-        android:text="Albums"
-        android:textColor="#FFFFFF"
+        android:shadowColor="@color/white"
+        android:text="@string/title"
+        android:textColor="@color/white"
         android:textSize="50sp"
         android:textStyle="bold"
         tools:layout_editor_absoluteX="16dp"

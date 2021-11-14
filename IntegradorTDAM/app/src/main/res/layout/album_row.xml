@@ -1,50 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp">
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_marginTop="10dp">
 
-    <ImageView
-        android:id="@+id/imageName1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_alignParentLeft="true"
+        android:orientation="horizontal"
         android:layout_marginTop="5dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/imagen1" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/imageName2"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/imageName1"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/imagen2" />
+        <ImageView
+            android:id="@+id/imageName1"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
 
-    <ImageView
-        android:id="@+id/imageName3"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/imageName2"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/imagen2" />
+        <ImageView
+            android:id="@+id/imageName2"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/imageName1"
+            android:scaleType="centerCrop" />
 
-    <ImageView
-        android:id="@+id/imageName4"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/imageName3"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/imagen4" />
+        <ImageView
+            android:id="@+id/imageName3"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/imageName2"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/imageName4"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/imageName3"
+            android:scaleType="centerCrop" />
+
+    </LinearLayout>
+
+
 
     <TextView
         android:id="@+id/albumName"
@@ -54,11 +58,10 @@
         android:layout_marginTop="115dp"
         android:layout_marginLeft="8dp"
         android:selectAllOnFocus="true"
-        android:shadowColor="#000000"
+        android:shadowColor="@color/black"
         android:shadowRadius="5"
         android:singleLine="true"
-        android:text="Paisajes"
-        android:textColor="#F8F5F5"
+        android:textColor="@color/white"
         android:textSize="30dp"
         android:textStyle="bold" />
 
@@ -70,11 +73,10 @@
         android:layout_marginTop="135dp"
         android:layout_toRightOf="@+id/albumName"
         android:adjustViewBounds="true"
-        android:shadowColor="#000000"
+        android:shadowColor="@color/black"
         android:shadowRadius="5"
         android:singleLine="true"
-        android:text="# fotos"
-        android:textColor="#F8F5F5"
+        android:textColor="@color/white"
         android:textSize="12dp"
         android:textStyle="bold|italic" />
 

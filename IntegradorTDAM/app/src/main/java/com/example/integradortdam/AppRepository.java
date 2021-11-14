@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -36,9 +35,10 @@ public class AppRepository implements Serializable {
     private int contador;
     private int total;
 
-    public void setActivity(MainActivity activity) { this.activity = activity; }
-    private MainActivity activity;
 
+    private MainActivity mainActivity;
+    private SecondActivity secondActivity;
+    private ThirdActivity thirdActivity;
 
     private Application application;
 
@@ -53,11 +53,10 @@ public class AppRepository implements Serializable {
         mAlbumDao = db.albumDao();
         mFotoDao = db.fotoDao();
         mComentarioDao = db.comentarioDao();
-        this.activity = activity;
+        this.mainActivity = activity;
         this.application = application;
-        deleteAll();
         firstTime = true;
-        obtenerData(application);
+        obtenerData();
     }
 
     AppRepository(Application application)  {
@@ -67,6 +66,11 @@ public class AppRepository implements Serializable {
         mComentarioDao = db.comentarioDao();
     }
 
+
+    public void setMainActivity(MainActivity mainActivity) { this.mainActivity = mainActivity; }
+    public void setSecondActivity(SecondActivity secondActivity) { this.secondActivity = secondActivity; }
+    public void setThirdActivity(ThirdActivity thirdActivity) { this.thirdActivity = thirdActivity; }
+
     private boolean isConnected(){
         ConnectivityManager cm = (ConnectivityManager) application.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -74,20 +78,18 @@ public class AppRepository implements Serializable {
         return isConnected;
     }
 
-    public void obtenerData(Application application){
-        if(isConnected()){
-            getApiData();
+    public void obtenerData() {
+        total = 3;
+        try {
+            mAllAlbums = getAllAlbums();
+            mAllFotos = getAllFotos();
+            mAllComentarios = getAllComentarios();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else{
-            total = 3;
-            try {
-                mAllAlbums =  getAllAlbums();
-                mAllFotos =  getAllFotos();
-                mAllComentarios = getAllComentarios();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        if (isConnected()) {
+            deleteAll();
+            getApiData(); }
     }
 
 
@@ -101,8 +103,7 @@ public class AppRepository implements Serializable {
         public ArrayList<AlbumModel> call() throws Exception {
             mAllAlbums = (ArrayList<AlbumModel>) mAlbumDao.getAllAlbums();
             contador += 1;
-            if(contador == total){ activity.setAlbums(mAllAlbums);
-            Log.d("Albums:" , mAllAlbums.toString());}
+            if(contador == total){ mainActivity.setAlbums(mAllAlbums);}
             return mAllAlbums;
         }
     };
@@ -116,8 +117,7 @@ public class AppRepository implements Serializable {
             public ArrayList<FotoModel> call() throws Exception {
                 mAllFotos = (ArrayList<FotoModel>) mFotoDao.getAllFotos();
                 contador += 1;
-                if(contador == total){ activity.setAlbums(mAllAlbums);
-                    Log.d("Albums:" , mAllAlbums.toString());}
+                if(contador == total){ mainActivity.setAlbums(mAllAlbums);}
                 return mAllFotos;
             }
         };
@@ -131,7 +131,7 @@ public class AppRepository implements Serializable {
             public ArrayList<ComentarioModel> call() throws Exception {
                 mAllComentarios.addAll(mComentarioDao.getAllComentarios());
                 contador += 1;
-                if(contador == total){ activity.setAlbumsBD(mAllAlbums);}
+                if(contador == total){ mainActivity.setAlbumsBD(mAllAlbums);}
                 return mAllComentarios;
             }
         };
@@ -165,12 +165,14 @@ public class AppRepository implements Serializable {
 
 
     public ArrayList<FotoModel> fotosDeAlbum(String id, String owner) throws ExecutionException, InterruptedException {
+        //if(isConnected()){ getApiPhotosDeAlbum(id, owner); }
         return getFotosDeAlbumDB(id);
         //if(!isConnected()){ return getFotosDeAlbumDB(id); }
         //else{ return getApiPhotosDeAlbum(id, owner); }
         }
 
     public ArrayList<ComentarioModel> ComentariosDeFoto(String id) throws ExecutionException, InterruptedException {
+        //if(isConnected()){ getApiComent(id); }
         return getComentariosDeFotoDB(id);
         //if(isConnected()){ return getComentariosDeFotoDB(id); }
         //else{ return  getApiComent(id);}
@@ -220,7 +222,7 @@ public class AppRepository implements Serializable {
 
     private void getApiData() {
         //ArrayList<AlbumModel> sets = new ArrayList<AlbumModel>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=b11f020a3b3ab747db00f20c52c7a295&user_id=193998612%40N06&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=84621cc136073e32a85e29c846ff1009&user_id=193998612%40N06&format=json&nojsoncallback=1";
         //text.setText("");
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -231,10 +233,10 @@ public class AppRepository implements Serializable {
                         try {
 
                             JSONObject obj = response.getJSONObject("photosets");
-                            Log.d("Prueba", response.toString());
+                            //Log.d("Prueba", response.toString());
 
                             JSONArray jsonarray = obj.optJSONArray("photoset");
-                            Log.d("Almbum", jsonarray.toString());
+                            //Log.d("Almbum", jsonarray.toString());
                             total = jsonarray.length();
 
                             for(int i=0;i<jsonarray.length();i++){
@@ -275,18 +277,18 @@ public class AppRepository implements Serializable {
 
     private ArrayList<FotoModel> getApiPhotosDeAlbum(String albumID, String ownerID){
         ArrayList<FotoModel> fotos = new ArrayList<>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=b11f020a3b3ab747db00f20c52c7a295&photoset_id="+albumID+"&user_id="+ownerID+"&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=84621cc136073e32a85e29c846ff1009&photoset_id="+albumID+"&user_id="+ownerID+"&format=json&nojsoncallback=1";
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            Log.d("URL", url);
-                            Log.d("JSON Photo", response.toString());
+                            //Log.d("URL", url);
+                            //Log.d("JSON Photo", response.toString());
                             JSONObject obj = response.getJSONObject("photoset");
-                            Log.d("Photo set", obj.toString());
+                            //Log.d("Photo set", obj.toString());
                             JSONArray jsonarray = obj.optJSONArray("photo");
-                            Log.d("Photo List", jsonarray.toString());
+                            //Log.d("Photo List", jsonarray.toString());
 
                             for(int i=0;i<jsonarray.length();i++){
                                 JSONObject object = jsonarray.getJSONObject(i);
@@ -312,16 +314,19 @@ public class AppRepository implements Serializable {
                                 contador += 1;
                                 if (contador == total){
                                     firstTime = false;
-                                    activity.setAlbums(mAllAlbums);
-                                    Log.d("Cantidad albums", String.valueOf(mAllAlbums.size()));
-                                    Log.d("Cantidad fotos", String.valueOf(mAllFotos.size()));
-                                    Log.d("Cantidad comentarios", String.valueOf(mAllComentarios.size()));
+                                    mainActivity.setAlbums(mAllAlbums);
+                                    //Log.d("Cantidad albums", String.valueOf(mAllAlbums.size()));
+                                    //Log.d("Cantidad fotos", String.valueOf(mAllFotos.size()));
+                                    //Log.d("Cantidad comentarios", String.valueOf(mAllComentarios.size()));
                                 }
+                            }
+                            else if(secondActivity != null){
+                                secondActivity.actualizarUI(fotos);
                             }
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Log.d("CATCH ERROR", e.toString());
+                            //Log.d("CATCH ERROR", e.toString());
                             //Toast.makeText(MainActivity.this, "Error al actualizar fotos", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -329,7 +334,7 @@ public class AppRepository implements Serializable {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //Toast.makeText(MainActivity.this, "Error al actualizar fotos", Toast.LENGTH_SHORT).show();
-                Log.d("Volley ERROR", error.getMessage());
+                //Log.d("Volley ERROR", error.getMessage());
 
             }
         }
@@ -339,10 +344,10 @@ public class AppRepository implements Serializable {
     }
 
     private ArrayList<ComentarioModel> getApiComent(String id) {
-        ArrayList<ComentarioModel> coments = new ArrayList<ComentarioModel>();
+        ArrayList<ComentarioModel> comments = new ArrayList<ComentarioModel>();
 
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=b11f020a3b3ab747db00f20c52c7a295&photo_id="+id+"&format=json&nojsoncallback=1";
-        Log.d("Url comentario", url);
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=84621cc136073e32a85e29c846ff1009&photo_id="+id+"&format=json&nojsoncallback=1";
+        //Log.d("Url comentario", url);
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -350,7 +355,7 @@ public class AppRepository implements Serializable {
                         // Display the first 500 characters of the response string.
                         try {
                             JSONObject obj = response.getJSONObject("comments");
-                            Log.d("Prueba", response.toString());
+                            //Log.d("Prueba", response.toString());
 
                             JSONArray jsonarray = obj.optJSONArray("comment");
                             if(jsonarray!=null) {
@@ -363,9 +368,14 @@ public class AppRepository implements Serializable {
                                     comentario.setId(object.optString("id"));
                                     comentario.setFotoId(id);
 
-                                    coments.add(comentario);
+                                    comments.add(comentario);
                                     mAllComentarios.add(comentario);
                                     insertComentario(comentario);
+
+                                    if(thirdActivity != null){
+                                        thirdActivity.actualizarComentarios(comments);
+                                    }
+
                                 }
                             }
 
@@ -382,6 +392,6 @@ public class AppRepository implements Serializable {
         }
         );// Add the request to the RequestQueue.
         MyApplication.getSharedQueue().add(stringRequest);
-        return coments;
+        return comments;
     }
 }

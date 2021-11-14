@@ -20,10 +20,10 @@ import java.util.List;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
 
+
     private List<AlbumModel> albumModelList;
     private AppRepository mRepository;
-
-
+    private boolean fotosCargadas = false;
 
     public AlbumAdapter(List<AlbumModel> albumModelList, AppRepository repository) {
         this.albumModelList = albumModelList;
@@ -41,22 +41,37 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final AlbumModel item = albumModelList.get(position);
-        String title = item.getTitle();
-        Integer tamanio = item.getCount_photos();
-        ArrayList<FotoModel> fotos = null;
+        
+        if(!fotosCargadas){
+            String title = item.getTitle();
+            Integer tamanio = item.getCount_photos();
+            ArrayList<FotoModel> fotos = null;
 
-        try { fotos = (ArrayList<FotoModel>) mRepository.fotosDeAlbum(item.getId(), item.getOwner()); }
-        catch (Exception e) { e.printStackTrace();}
+            try { fotos = (ArrayList<FotoModel>) mRepository.fotosDeAlbum(item.getId(), item.getOwner()); }
+            catch (Exception e) { e.printStackTrace();}
 
-        //ArrayList<FotoModel> fotos = item.getPhoto();
-        if(fotos.size()>3){
-            loadImage(fotos.get(0).getImageUrl(), holder.imagen1 );
-            loadImage(fotos.get(1).getImageUrl(), holder.imagen2 );
-            loadImage(fotos.get(2).getImageUrl(), holder.imagen3 );
-            loadImage(fotos.get(3).getImageUrl(), holder.imagen4 );
+            holder.imagen1.setVisibility(View.GONE);
+            holder.imagen2.setVisibility(View.GONE);
+            holder.imagen3.setVisibility(View.GONE);
+            holder.imagen4.setVisibility(View.GONE);
+
+            //ArrayList<FotoModel> fotos = item.getPhoto();
+            if(fotos.size()>=1){
+                loadImage(fotos.get(0).getImageUrl(), holder.imagen1 );}
+                holder.imagen1.setVisibility(View.VISIBLE);
+            if(fotos.size()>=2){
+                loadImage(fotos.get(1).getImageUrl(), holder.imagen2 );}
+            holder.imagen2.setVisibility(View.VISIBLE);
+            if(fotos.size()>=3){
+                loadImage(fotos.get(2).getImageUrl(), holder.imagen3 );}
+            holder.imagen3.setVisibility(View.VISIBLE);
+            if(fotos.size()>3){
+                loadImage(fotos.get(3).getImageUrl(), holder.imagen4 );
+                holder.imagen4.setVisibility(View.VISIBLE);
+            }
+            holder.name.setText(title);
+            holder.tamanio.setText(tamanio.toString() + " fotos");
         }
-        holder.name.setText(title);
-        holder.tamanio.setText(tamanio.toString() + " fotos");
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -68,15 +83,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
         return albumModelList.size();
     }
-
-
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -112,6 +124,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             }
         });
 ;
+    }
+
+    public void setAlbumModelList(List<AlbumModel> albumModelList) {
+        this.albumModelList = albumModelList;
     }
 
 

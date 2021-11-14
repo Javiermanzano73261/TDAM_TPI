@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">IntegradorTDAM</string>
+    <string name="title">Sets</string>
+    <string name="orderbyAZ">Display alphabetically</string>
+    <string name="orderbyOld">Show oldest firts</string>
+    <string name="orderbyNew">Show newst firts</string>
+    <string name="comment">Comments</string>
+    <string name="toast">You choice:</string>
+    <string name="errorToast">No filter selected</string>
+</resources>

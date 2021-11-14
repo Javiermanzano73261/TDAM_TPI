@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">IntegradorTDAM</string>
+    <string name="title">Albums</string>
+    <string name="orderbyAZ">Mostrar oredenas alfabéticamente</string>
+    <string name="orderbyOld">Mostrar más antiguas primero</string>
+    <string name="orderbyNew">Mostrar más nuevas primero</string>
+    <string name="comment">Comentarios</string>
+    <string name="toast">Seleccionaste: </string>
+    <string name="errorToast">No hay selección de filtro</string>
 </resources>
