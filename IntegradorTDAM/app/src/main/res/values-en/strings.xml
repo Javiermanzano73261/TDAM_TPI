@@ -8,6 +8,7 @@
     <string name="selectionMessage">Selected: </string>
     <string name="errorSelectionMessage">No filter selected</string>
     <string name="updateMessage">Updating photo sets...</string>
+    <string name="errorUpdateMessage">Unable to update photosets</string>
     <string name="subjectEmail">Flickr Photo</string>
     <string name="textEmail">Hello! Show this picture: </string>
 </resources>

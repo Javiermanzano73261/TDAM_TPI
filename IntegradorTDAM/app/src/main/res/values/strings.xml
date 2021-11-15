@@ -8,6 +8,7 @@
     <string name="selectionMessage">Seleccionaste: </string>
     <string name="errorSelectionMessage">No hay selección de filtro</string>
     <string name="updateMessage">Actualizando albums...</string>
+    <string name="errorUpdateMessage">No es posible actualizar albums</string>
     <string name="subjectEmail">Flickr Foto</string>
     <string name="textEmail">Hola! Mira esta foto: </string>
 </resources>

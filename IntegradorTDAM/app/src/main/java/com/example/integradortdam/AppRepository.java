@@ -55,7 +55,12 @@ public class AppRepository implements Serializable {
         this.mainActivity = activity;
         this.application = application;
         firstTime = true;
-        obtenerData();
+        if(obtenerData()){
+            Toast.makeText(mainActivity, mainActivity.getString(R.string.updateMessage), Toast.LENGTH_LONG ).show();
+        }
+        else{
+            Toast.makeText(mainActivity, mainActivity.getString(R.string.errorUpdateMessage), Toast.LENGTH_LONG ).show();
+        };
     }
 
     AppRepository(Application application)  {
@@ -74,8 +79,8 @@ public class AppRepository implements Serializable {
         return isConnected;
     }
 
-    public void obtenerData() {
-        Toast.makeText(mainActivity, mainActivity.getString(R.string.updateMessage), Toast.LENGTH_LONG ).show();
+    public boolean obtenerData() {
+        boolean seLlamoAApi = false;
         total = 3;
         try {
             mAllAlbums = getAllAlbums();
@@ -86,7 +91,10 @@ public class AppRepository implements Serializable {
         }
         if (isConnected()) {
             deleteAll();
-            getApiData(); }
+            getApiData();
+            seLlamoAApi = true;
+        }
+        return seLlamoAApi;
     }
 
 
