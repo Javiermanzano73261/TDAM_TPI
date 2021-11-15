@@ -197,6 +197,7 @@ public class AppRepository implements Serializable {
     }
 
     private void getApiData() {
+        ArrayList<AlbumModel> albums = new ArrayList<>();
         String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=003fa3879559a46bee84d99f01192d46&user_id=193998612%40N06&format=json&nojsoncallback=1";
         //text.setText("");
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -221,8 +222,9 @@ public class AppRepository implements Serializable {
                                 album.setCount_photos(object.optInt("count_photos"));
 
                                 if(firstTime){getApiPhotosDeAlbum(album.getId(), album.getOwner());}
-                                mAllAlbums.add(album);
+                                albums.add(album);
                                 insertAlbum(album);
+                                if(contador==total){mAllAlbums=albums;}
 
                             }
                         } catch (Exception e) {

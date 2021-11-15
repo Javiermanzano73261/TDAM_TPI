@@ -45,7 +45,7 @@ public class SecondActivity extends AppCompatActivity {
         //reyclerViewFotos.setLayoutManager(new LinearLayoutManager(this));
         reyclerViewFotos.setLayoutManager(new GridLayoutManager(this, 3));
 
-        mAdapter = new FotoAdapter(fotos, mRepository);
+        mAdapter = new FotoAdapter(ordenarXantiguedad(), mRepository);
         reyclerViewFotos.setAdapter(mAdapter);
 
         cargarMenuOpciones();
@@ -86,8 +86,8 @@ public class SecondActivity extends AppCompatActivity {
 
     private void cargarMenuOpciones() {
         ArrayList<String> opciones = new ArrayList<>();
-        opciones.add(getString(R.string.orderbyOld));
         opciones.add(getString(R.string.orderbyNew));
+        opciones.add(getString(R.string.orderbyOld));
         opciones.add(getString(R.string.orderbyAZ));
 
         ArrayAdapter adp = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, opciones);

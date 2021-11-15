@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
         reyclerViewAlbum.setAdapter(mAdapter);
 
         cargarMenuOpciones();
-        actualizarUI(sets);
+        //actualizarUI(sets);
     }
 
     private void cargarMenuOpciones(){
