@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">IntegradorTDAM</string>
-    <string name="title">Sets</string>
+    <string name="title">Photo Sets</string>
     <string name="orderbyAZ">Display alphabetically</string>
     <string name="orderbyOld">Show oldest firts</string>
     <string name="orderbyNew">Show newst firts</string>
     <string name="comment">Comments</string>
-    <string name="toast">You choice:</string>
-    <string name="errorToast">No filter selected</string>
+    <string name="selectionMessage">Selected: </string>
+    <string name="errorSelectionMessage">No filter selected</string>
+    <string name="updateMessage">Updating photo sets...</string>
+    <string name="subjectEmail">Flickr Photo</string>
+    <string name="textEmail">Hello! Show this picture: </string>
 </resources>

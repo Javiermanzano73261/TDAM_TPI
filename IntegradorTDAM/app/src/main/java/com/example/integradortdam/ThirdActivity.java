@@ -36,7 +36,6 @@ public class ThirdActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mRepository = new AppRepository(this.getApplication());
-        mRepository.setThirdActivity(this);
         setContentView(R.layout.activity_third);
 
         recibirDatos();
@@ -45,32 +44,30 @@ public class ThirdActivity extends AppCompatActivity {
         btnURL = (FloatingActionButton) findViewById(R.id.BtnURL);
 
         loadImage();
-        //getApiComent();
 
         reyclerViewComentarios = (RecyclerView) findViewById(R.id.reyclerViewComentarios);
         reyclerViewComentarios.setHasFixedSize(true);
-
         reyclerViewComentarios.setLayoutManager(new LinearLayoutManager(this));
-
 
         mAdapter = new ComentarioAdapter(comentarios);
         reyclerViewComentarios.setAdapter(mAdapter);
+
+        if(comentarios!=null){
+        String st = String.valueOf(comentarios.size());
+        cantidad.setText("(" + st + ")");}
 
         btnURL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Uri link = Uri.parse(item.getWebUrl());
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_SUBJECT, "Flick Foto");
-                i.putExtra(Intent.EXTRA_TEXT, link);
 
-                startActivity(Intent.createChooser(i, "Mail"));
+                Intent i = new Intent(Intent.ACTION_SENDTO);
+                i.setData(Uri.parse("mailto:"));
+                i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subjectEmail));
+                String text = getString(R.string.textEmail) + " "+ link;
+                i.putExtra(Intent.EXTRA_TEXT, text);
 
-
-
-                //Intent i = new Intent(Intent.ACTION_VIEW, link);
-                //startActivity(i);
+                startActivity(i);
             }
         });
     }
@@ -79,7 +76,7 @@ public class ThirdActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         item = (FotoModel) extras.getSerializable("FotoClick");
         try {
-            comentarios = (ArrayList<ComentarioModel>) mRepository.ComentariosDeFoto(item.getId());
+            comentarios = (ArrayList<ComentarioModel>) mRepository.getComentariosDeFotoDB(item.getId());
         }
         catch (Exception e) { e.printStackTrace();}
     }
@@ -104,56 +101,12 @@ public class ThirdActivity extends AppCompatActivity {
         if(comments.size() != 0) {
             mAdapter.setComentarioModelList(comments);
             mAdapter.notifyDataSetChanged();
+
             String st = String.valueOf(comments.size());
             cantidad.setText("(" + st + ")");
         }
     }
-/*
-    private void getApiComent() {
 
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=9c3a294665a3de8e2d3bcc06f6679760&photo_id="+item.getId()+"&format=json&nojsoncallback=1";
-
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // Display the first 500 characters of the response string.
-                        try {
-
-                            JSONObject obj = response.getJSONObject("comments");
-                            Log.d("Prueba", response.toString());
-
-                            JSONArray jsonarray = obj.optJSONArray("comment");
-                            //Log.d("Comentarios", jsonarray.toString());
-
-                            ArrayList<ComentarioModel> coments = new ArrayList<ComentarioModel>();
-                            for(int i=0;i<jsonarray.length();i++){
-                                JSONObject object = jsonarray.getJSONObject(i);
-                                ComentarioModel comentario = new ComentarioModel();
-
-                                comentario.setRealname(object.optString("realname"));
-                                comentario.set_content(object.optString("_content"));
-                                coments.add(comentario);
-                            }
-
-                            item.setComentarios(coments);
-                            cargarComentarios();
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }
-        );// Add the request to the RequestQueue.
-        MyApplication.getSharedQueue().add(stringRequest);
-        //return ps;
-    }*/
 
 
 

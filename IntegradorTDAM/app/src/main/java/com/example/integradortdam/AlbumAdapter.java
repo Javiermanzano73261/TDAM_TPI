@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,7 +48,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             Integer tamanio = item.getCount_photos();
             ArrayList<FotoModel> fotos = null;
 
-            try { fotos = (ArrayList<FotoModel>) mRepository.fotosDeAlbum(item.getId(), item.getOwner()); }
+            try { fotos = (ArrayList<FotoModel>) mRepository.getFotosDeAlbumDB(item.getId()); }
             catch (Exception e) { e.printStackTrace();}
 
             holder.imagen1.setVisibility(View.GONE);
@@ -55,20 +56,37 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             holder.imagen3.setVisibility(View.GONE);
             holder.imagen4.setVisibility(View.GONE);
 
-            //ArrayList<FotoModel> fotos = item.getPhoto();
-            if(fotos.size()>=1){
-                loadImage(fotos.get(0).getImageUrl(), holder.imagen1 );}
+            //Vista previa de imágenes de cada album
+            if(fotos.size()>0) {
+                loadImage(fotos.get(0).getImageUrl(), holder.imagen1);
                 holder.imagen1.setVisibility(View.VISIBLE);
-            if(fotos.size()>=2){
-                loadImage(fotos.get(1).getImageUrl(), holder.imagen2 );}
-            holder.imagen2.setVisibility(View.VISIBLE);
-            if(fotos.size()>=3){
-                loadImage(fotos.get(2).getImageUrl(), holder.imagen3 );}
-            holder.imagen3.setVisibility(View.VISIBLE);
+                //Adaptación de los pesos
+                if (tamanio == 1) {
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.imagen1.getLayoutParams();
+                    params.weight = 0.0f;
+                    holder.imagen1.setLayoutParams(params);
+                }
+            }
+            if(fotos.size()>1){
+                loadImage(fotos.get(1).getImageUrl(), holder.imagen2 );
+                holder.imagen2.setVisibility(View.VISIBLE);
+                //Adaptación de los pesos
+                if(tamanio==2){
+                        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) holder.imagen1.getLayoutParams();
+                        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) holder.imagen2.getLayoutParams();
+                        params1.weight = 0.5f;
+                        params2.weight = 0.5f;
+                        holder.imagen1.setLayoutParams(params1);
+                        holder.imagen2.setLayoutParams(params2);
+                    }
+            }
+            if(fotos.size()>2){
+                loadImage(fotos.get(2).getImageUrl(), holder.imagen3 );
+                holder.imagen3.setVisibility(View.VISIBLE);}
             if(fotos.size()>3){
                 loadImage(fotos.get(3).getImageUrl(), holder.imagen4 );
-                holder.imagen4.setVisibility(View.VISIBLE);
-            }
+                holder.imagen4.setVisibility(View.VISIBLE); }
+
             holder.name.setText(title);
             holder.tamanio.setText(tamanio.toString() + " fotos");
         }

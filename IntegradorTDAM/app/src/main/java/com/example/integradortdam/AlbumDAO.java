@@ -30,7 +30,7 @@ public interface AlbumDAO {
     LiveData<List<AlbumModel>> getAlphabetizedAlbums();
 
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(AlbumModel album);
 
     @Query("DELETE FROM album_table")

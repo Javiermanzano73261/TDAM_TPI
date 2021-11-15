@@ -27,7 +27,7 @@ public interface ComentarioDAO {
     @Query("SELECT * FROM comentario_table WHERE fotoId=:fotoId")
     List<ComentarioModel> getComentariosDeFoto(final String fotoId);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(ComentarioModel comentario);
 
     @Query("DELETE FROM comentario_table")

@@ -5,6 +5,9 @@
     <string name="orderbyOld">Mostrar más antiguas primero</string>
     <string name="orderbyNew">Mostrar más nuevas primero</string>
     <string name="comment">Comentarios</string>
-    <string name="toast">Seleccionaste: </string>
-    <string name="errorToast">No hay selección de filtro</string>
+    <string name="selectionMessage">Seleccionaste: </string>
+    <string name="errorSelectionMessage">No hay selección de filtro</string>
+    <string name="updateMessage">Actualizando albums...</string>
+    <string name="subjectEmail">Flickr Foto</string>
+    <string name="textEmail">Hola! Mira esta foto: </string>
 </resources>

@@ -25,7 +25,7 @@ public interface FotoDAO {
     @Query("SELECT * FROM foto_table WHERE albumId=:albumId")
     List<FotoModel> getFotosDeAlbum(final String albumId);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(FotoModel foto);
 
     @Query("DELETE FROM foto_table")

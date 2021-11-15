@@ -36,6 +36,7 @@ public class ComentarioAdapter extends RecyclerView.Adapter<ComentarioAdapter.Vi
 
     @Override
     public int getItemCount() {
+        if(comentarioModelList == null){return 0;}
         return comentarioModelList.size();
     }
 
@@ -52,8 +53,6 @@ public class ComentarioAdapter extends RecyclerView.Adapter<ComentarioAdapter.Vi
     public void setComentarioModelList(List<ComentarioModel> comentarioModelList) {
         this.comentarioModelList = comentarioModelList;
     }
-
-
 
 
 }

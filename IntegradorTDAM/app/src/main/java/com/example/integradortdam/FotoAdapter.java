@@ -37,7 +37,6 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
         ViewHolder viewHolder = new ViewHolder(v);
 
         return viewHolder;
-
     }
 
 
@@ -45,8 +44,6 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         final FotoModel item = fotoModelList.get(position);
         loadImage(item.getImageUrl(), holder.imagen1 );
-
-
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,11 +21,9 @@ public class MainActivity extends Activity {
 
     private RecyclerView reyclerViewAlbum;
     private AlbumAdapter mAdapter;
-    private TextView text;
     private ArrayList<AlbumModel> sets;
-    private int control = 0;
-    private int completos = 0;
     private boolean cargaCompleta = false;
+    private boolean menuCargado = false;
     private AppRepository mRepository;
 
 
@@ -35,24 +32,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.sets = new ArrayList<AlbumModel>();
         this.mRepository = new AppRepository(this.getApplication(), this);
-        //mRepository.setActivity(this);
         setContentView(R.layout.activity_main);
-
-        //getApiData();
 
         reyclerViewAlbum = (RecyclerView) findViewById(R.id.reyclerViewAlbum);
         reyclerViewAlbum.setHasFixedSize(true);
         reyclerViewAlbum.setLayoutManager(new LinearLayoutManager(this));
-        //reyclerViewUser.setLayoutManager(new GridLayoutManager(this, 3));
-
 
         mAdapter = new AlbumAdapter(sets, mRepository);
         reyclerViewAlbum.setAdapter(mAdapter);
 
         cargarMenuOpciones();
         actualizarUI(sets);
-
-
     }
 
     private void cargarMenuOpciones(){
@@ -82,8 +72,11 @@ public class MainActivity extends Activity {
                     else if(opcion == getString(R.string.orderbyOld)){
                         actualizarUI(ordenarXantiguedad());
                     }
+                    if(menuCargado) {
+                        Toast.makeText(MainActivity.this, getString(R.string.selectionMessage) + opcion, Toast.LENGTH_SHORT).show();
+                    }
                 }
-                Toast.makeText(MainActivity.this, getString(R.string.toast) + opcion, Toast.LENGTH_SHORT).show();
+                menuCargado = true;
             }
 
             @Override

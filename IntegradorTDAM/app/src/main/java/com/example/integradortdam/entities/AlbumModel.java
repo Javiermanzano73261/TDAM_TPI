@@ -15,15 +15,6 @@ public class AlbumModel implements Serializable {
     public AlbumModel() {
     }
 
-    public AlbumModel(String name, int tamanio, int imagen1, int imagen2, int imagen3, int imagen4) {
-        this.title = name;
-        this.count_photos = tamanio;
-        this.imagen1 = imagen1;
-        this.imagen2 = imagen2;
-        this.imagen3 = imagen3;
-        this.imagen4 = imagen4;
-    }
-
     private int imagen1;
     private int imagen2;
     private int imagen3;
@@ -38,7 +29,6 @@ public class AlbumModel implements Serializable {
     private int date_create;
     private String title;
     private String ownername;
-    //private ArrayList<FotoModel> photo;
     private int count_photos;
 
 
@@ -74,12 +64,6 @@ public class AlbumModel implements Serializable {
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
-
-    /*
-    public ArrayList<FotoModel> getPhoto() { return photo; }
-    public void setPhoto(ArrayList<FotoModel> photo) { this.photo = photo; }
-
-     */
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }

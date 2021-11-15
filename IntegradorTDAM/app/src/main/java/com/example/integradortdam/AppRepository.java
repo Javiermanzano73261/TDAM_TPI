@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -37,8 +38,6 @@ public class AppRepository implements Serializable {
 
 
     private MainActivity mainActivity;
-    private SecondActivity secondActivity;
-    private ThirdActivity thirdActivity;
 
     private Application application;
 
@@ -66,10 +65,7 @@ public class AppRepository implements Serializable {
         mComentarioDao = db.comentarioDao();
     }
 
-
     public void setMainActivity(MainActivity mainActivity) { this.mainActivity = mainActivity; }
-    public void setSecondActivity(SecondActivity secondActivity) { this.secondActivity = secondActivity; }
-    public void setThirdActivity(ThirdActivity thirdActivity) { this.thirdActivity = thirdActivity; }
 
     private boolean isConnected(){
         ConnectivityManager cm = (ConnectivityManager) application.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -79,6 +75,7 @@ public class AppRepository implements Serializable {
     }
 
     public void obtenerData() {
+        Toast.makeText(mainActivity, mainActivity.getString(R.string.updateMessage), Toast.LENGTH_LONG ).show();
         total = 3;
         try {
             mAllAlbums = getAllAlbums();
@@ -139,7 +136,7 @@ public class AppRepository implements Serializable {
         return future.get();
     }
 
-    private   ArrayList<FotoModel> getFotosDeAlbumDB(String id) throws ExecutionException, InterruptedException {
+    public ArrayList<FotoModel> getFotosDeAlbumDB(String id) throws ExecutionException, InterruptedException {
         Callable<ArrayList<FotoModel>> callable = new Callable<ArrayList<FotoModel>>() {
             @Override
             public ArrayList<FotoModel> call() throws Exception {
@@ -151,7 +148,7 @@ public class AppRepository implements Serializable {
         return future.get();
     }
 
-    private  ArrayList<ComentarioModel> getComentariosDeFotoDB(String id) throws ExecutionException, InterruptedException {
+    public  ArrayList<ComentarioModel> getComentariosDeFotoDB(String id) throws ExecutionException, InterruptedException {
         Callable<ArrayList<ComentarioModel>> callable = new Callable<ArrayList<ComentarioModel>>() {
             @Override
             public ArrayList<ComentarioModel> call() throws Exception {
@@ -164,28 +161,7 @@ public class AppRepository implements Serializable {
     }
 
 
-    public ArrayList<FotoModel> fotosDeAlbum(String id, String owner) throws ExecutionException, InterruptedException {
-        //if(isConnected()){ getApiPhotosDeAlbum(id, owner); }
-        return getFotosDeAlbumDB(id);
-        //if(!isConnected()){ return getFotosDeAlbumDB(id); }
-        //else{ return getApiPhotosDeAlbum(id, owner); }
-        }
 
-    public ArrayList<ComentarioModel> ComentariosDeFoto(String id) throws ExecutionException, InterruptedException {
-        //if(isConnected()){ getApiComent(id); }
-        return getComentariosDeFotoDB(id);
-        //if(isConnected()){ return getComentariosDeFotoDB(id); }
-        //else{ return  getApiComent(id);}
-    }
-
-       /* ArrayList<ComentarioModel> comentarios = new ArrayList<>();
-        for(int i=0;i<mAllComentarios.size();i++){
-            if(mAllFotos.get(i).getAlbumId().compareTo(id)  == 0){
-                comentarios.add(mAllComentarios.get(i));
-            }
-        }
-        return comentarios;
-        */
 
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
@@ -221,22 +197,15 @@ public class AppRepository implements Serializable {
     }
 
     private void getApiData() {
-        //ArrayList<AlbumModel> sets = new ArrayList<AlbumModel>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=84621cc136073e32a85e29c846ff1009&user_id=193998612%40N06&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=003fa3879559a46bee84d99f01192d46&user_id=193998612%40N06&format=json&nojsoncallback=1";
         //text.setText("");
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // Display the first 500 characters of the response string.
-                        //text.setText(response.toString());
                         try {
-
                             JSONObject obj = response.getJSONObject("photosets");
-                            //Log.d("Prueba", response.toString());
-
                             JSONArray jsonarray = obj.optJSONArray("photoset");
-                            //Log.d("Almbum", jsonarray.toString());
                             total = jsonarray.length();
 
                             for(int i=0;i<jsonarray.length();i++){
@@ -252,11 +221,8 @@ public class AppRepository implements Serializable {
                                 album.setCount_photos(object.optInt("count_photos"));
 
                                 if(firstTime){getApiPhotosDeAlbum(album.getId(), album.getOwner());}
-                                //album.setPhoto(getApiPhotos(album.getId(), album.getOwner()));
-                                //sets.add(album);
                                 mAllAlbums.add(album);
                                 insertAlbum(album);
-                                //mRepository.insertAlbum(album);
 
                             }
                         } catch (Exception e) {
@@ -272,23 +238,18 @@ public class AppRepository implements Serializable {
         }
         );// Add the request to the RequestQueue.
         MyApplication.getSharedQueue().add(stringRequest);
-        //return sets;
     }
 
-    private ArrayList<FotoModel> getApiPhotosDeAlbum(String albumID, String ownerID){
+    private void getApiPhotosDeAlbum(String albumID, String ownerID){
         ArrayList<FotoModel> fotos = new ArrayList<>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=84621cc136073e32a85e29c846ff1009&photoset_id="+albumID+"&user_id="+ownerID+"&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=003fa3879559a46bee84d99f01192d46&photoset_id="+albumID+"&user_id="+ownerID+"&format=json&nojsoncallback=1";
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            //Log.d("URL", url);
-                            //Log.d("JSON Photo", response.toString());
                             JSONObject obj = response.getJSONObject("photoset");
-                            //Log.d("Photo set", obj.toString());
                             JSONArray jsonarray = obj.optJSONArray("photo");
-                            //Log.d("Photo List", jsonarray.toString());
 
                             for(int i=0;i<jsonarray.length();i++){
                                 JSONObject object = jsonarray.getJSONObject(i);
@@ -301,32 +262,20 @@ public class AppRepository implements Serializable {
                                 foto.setImageUrl("https://live.staticflickr.com/"+foto.getServer()+"/"+foto.getId()+"_"+foto.getSecret()+"_w.jpg");
 
                                 if(firstTime){getApiComent(foto.getId());}
-                                //foto.setComentarios(getApiComent(foto));
                                 foto.setAlbumId(albumID);
-
                                 fotos.add(foto);
                                 mAllFotos.add(foto);
                                 insertFoto(foto);
-
-                                //mRepository.insertFoto(foto);
                             }
                             if(firstTime){
                                 contador += 1;
                                 if (contador == total){
                                     firstTime = false;
                                     mainActivity.setAlbums(mAllAlbums);
-                                    //Log.d("Cantidad albums", String.valueOf(mAllAlbums.size()));
-                                    //Log.d("Cantidad fotos", String.valueOf(mAllFotos.size()));
-                                    //Log.d("Cantidad comentarios", String.valueOf(mAllComentarios.size()));
                                 }
                             }
-                            else if(secondActivity != null){
-                                secondActivity.actualizarUI(fotos);
-                            }
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            //Log.d("CATCH ERROR", e.toString());
+                        } catch (Exception e) { e.printStackTrace();
                             //Toast.makeText(MainActivity.this, "Error al actualizar fotos", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -334,29 +283,22 @@ public class AppRepository implements Serializable {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //Toast.makeText(MainActivity.this, "Error al actualizar fotos", Toast.LENGTH_SHORT).show();
-                //Log.d("Volley ERROR", error.getMessage());
-
             }
         }
         );// Add the request to the RequestQueue.
         MyApplication.getSharedQueue().add(stringRequest);
-        return fotos;
+
     }
 
-    private ArrayList<ComentarioModel> getApiComent(String id) {
+    private void getApiComent(String id) {
         ArrayList<ComentarioModel> comments = new ArrayList<ComentarioModel>();
-
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=84621cc136073e32a85e29c846ff1009&photo_id="+id+"&format=json&nojsoncallback=1";
-        //Log.d("Url comentario", url);
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=003fa3879559a46bee84d99f01192d46&photo_id="+id+"&format=json&nojsoncallback=1";
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // Display the first 500 characters of the response string.
                         try {
                             JSONObject obj = response.getJSONObject("comments");
-                            //Log.d("Prueba", response.toString());
-
                             JSONArray jsonarray = obj.optJSONArray("comment");
                             if(jsonarray!=null) {
                                 for (int i = 0; i < jsonarray.length(); i++) {
@@ -371,11 +313,6 @@ public class AppRepository implements Serializable {
                                     comments.add(comentario);
                                     mAllComentarios.add(comentario);
                                     insertComentario(comentario);
-
-                                    if(thirdActivity != null){
-                                        thirdActivity.actualizarComentarios(comments);
-                                    }
-
                                 }
                             }
 
@@ -392,6 +329,5 @@ public class AppRepository implements Serializable {
         }
         );// Add the request to the RequestQueue.
         MyApplication.getSharedQueue().add(stringRequest);
-        return comments;
     }
 }

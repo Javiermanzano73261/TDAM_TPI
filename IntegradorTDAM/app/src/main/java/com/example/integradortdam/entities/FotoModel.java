@@ -26,7 +26,6 @@ public class FotoModel implements Serializable {
 
     private String title;
     private int imagen1;
-    //private ArrayList<ComentarioModel> comentarios;
     @PrimaryKey
     @NonNull
     private String id;
@@ -39,7 +38,6 @@ public class FotoModel implements Serializable {
     private String imageUrl;
 
 
-
     public String getTitle() { return title; }
     public void setTitle(String title) {
         this.title = title;
@@ -47,7 +45,6 @@ public class FotoModel implements Serializable {
 
     public int getImagen1() { return imagen1; }
     public void setImagen1(int imagen1) { this.imagen1 = imagen1; }
-
 
     @NonNull
     public String getId() { return id; }
@@ -72,18 +69,8 @@ public class FotoModel implements Serializable {
     public void setImageUrl(String url) {
         this.imageUrl = url;
     }
-/*
-    public ArrayList<ComentarioModel> getComentarios() { return comentarios; }
-    public void setComentarios(ArrayList<ComentarioModel> comentarios) { this.comentarios = comentarios; }
-
- */
 
     public String getAlbumId() { return albumId; }
     public void setAlbumId(String albumId) { this.albumId = albumId; }
-
-
-
-
-
 
 }

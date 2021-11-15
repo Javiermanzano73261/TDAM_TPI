@@ -17,7 +17,6 @@ public class ComentarioModel implements Serializable {
 
     private String _content;
     private String realname;
-
     @PrimaryKey
     @NonNull
     private String id;
@@ -36,7 +35,5 @@ public class ComentarioModel implements Serializable {
 
     public String getFotoId() { return fotoId; }
     public void setFotoId(String fotoId) { this.fotoId = fotoId; }
-
-
 
 }
