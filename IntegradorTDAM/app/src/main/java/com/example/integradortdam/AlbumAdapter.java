@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.integradortdam.entities.AlbumModel;
-import com.example.integradortdam.entities.FotoModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,7 +22,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
     private List<AlbumModel> albumModelList;
     private AppRepository mRepository;
-    private boolean fotosCargadas = false;
 
     public AlbumAdapter(List<AlbumModel> albumModelList, AppRepository repository) {
         this.albumModelList = albumModelList;
@@ -35,26 +32,17 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_row, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
-
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final AlbumModel item = albumModelList.get(position);
-
-        if(!fotosCargadas){
-            String title = item.getTitle();
-            Integer tamanio = item.getCount_photos();
-            ArrayList<FotoModel> fotos = new ArrayList<>();
-
-            try { fotos = (ArrayList<FotoModel>) mRepository.getFotosDeAlbumDB(item.getId());
-                if(fotos != null){setVistaPrevia(holder, fotos);}
-                holder.name.setText(title);
-                holder.tamanio.setText(tamanio.toString() + " fotos");}
-            catch (Exception e) { e.printStackTrace();}
-
-        }
+        String title = item.getTitle();
+        Integer tamanio = item.getCount_photos();
+        setVistaPrevia(holder, item);
+        holder.name.setText(title);
+        holder.tamanio.setText(tamanio.toString() + " "+ mRepository.getMainActivity().getString(R.string.cantPhotos));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +55,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
         });
     }
 
-    private void setVistaPrevia(ViewHolder holder, ArrayList<FotoModel> fotos){
+    private void setVistaPrevia(ViewHolder holder, AlbumModel album){
         //Ocultamos todas las imageView y luego habilitamos las necesarias
         holder.imagen1.setVisibility(View.GONE);
         holder.imagen2.setVisibility(View.GONE);
@@ -81,28 +69,28 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
         holder.imagen4.setLayoutParams(changeWeigth(holder.imagen4, 1.0f));
 
         //Vista previa de imágenes de cada album
-        if(fotos.size()>0) {
-            loadImage(fotos.get(0).getImageUrl(), holder.imagen1);
+        if(album.getImagen1()!=null) {
+            loadImage(album.getImagen1(), holder.imagen1);
             holder.imagen1.setVisibility(View.VISIBLE);
             //Adaptación de los pesos
-            if (fotos.size() == 1) {
+            if (album.getImagen2() == null) {
                 holder.imagen1.setLayoutParams(changeWeigth(holder.imagen1, 0.0f));
             }
         }
-        if(fotos.size()>1){
-            loadImage(fotos.get(1).getImageUrl(), holder.imagen2 );
+        if(album.getImagen2() != null){
+            loadImage(album.getImagen2(), holder.imagen2 );
             holder.imagen2.setVisibility(View.VISIBLE);
             //Adaptación de los pesos
-            if(fotos.size()==2){
+            if(album.getImagen3() == null){
                 holder.imagen1.setLayoutParams(changeWeigth(holder.imagen1, 0.5f));
                 holder.imagen2.setLayoutParams(changeWeigth(holder.imagen2, 0.5f));
             }
         }
-        if(fotos.size()>2){
-            loadImage(fotos.get(2).getImageUrl(), holder.imagen3 );
+        if(album.getImagen3() != null){
+            loadImage(album.getImagen3(), holder.imagen3 );
             holder.imagen3.setVisibility(View.VISIBLE);}
-        if(fotos.size()>3){
-            loadImage(fotos.get(3).getImageUrl(), holder.imagen4 );
+        if(album.getImagen4() != null){
+            loadImage(album.getImagen4(), holder.imagen4 );
             holder.imagen4.setVisibility(View.VISIBLE); }
     }
 
@@ -138,19 +126,16 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
     private void loadImage(String url, ImageView image) {
         ImageLoader imageLoader = MyApplication.getImageLoader();
-
         imageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //text.setText("Error: " + error.getMessage());
             }
-
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
                 image.setImageBitmap(response.getBitmap());
             }
         });
-;
     }
 
     public void setAlbumModelList(List<AlbumModel> albumModelList) {

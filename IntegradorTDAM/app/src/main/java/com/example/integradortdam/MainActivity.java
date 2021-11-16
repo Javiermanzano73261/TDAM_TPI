@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String opcion = (String)  mSpinner.getAdapter().getItem(position);
 
-                if(cargaCompleta){
+                if(menuCargado){
                     if(opcion == getString(R.string.orderbyAZ)){
                         actualizarUI(ordenarXAZ());
                     }
@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
 
 
    private ArrayList<AlbumModel> ordenarXAZ(){
-       ArrayList<AlbumModel> list = (ArrayList<AlbumModel>) this.sets.clone();
+        ArrayList<AlbumModel> list = (ArrayList<AlbumModel>) this.sets.clone();
        Collections.sort(list, new Comparator<AlbumModel>() {
            @Override
            public int compare(AlbumModel obj1, AlbumModel obj2) {
