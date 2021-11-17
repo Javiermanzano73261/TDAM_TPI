@@ -215,7 +215,7 @@ public class AppRepository implements Serializable {
 
     private void getApiData() {
         ArrayList<AlbumModel> albums = new ArrayList<>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=0f7752ba7f88e148da2b2241725c964d&user_id=193998612%40N06&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=9f876a3b11a076713ccd4c47882e5636&user_id=193998612%40N06&format=json&nojsoncallback=1";
         //text.setText("");
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -260,7 +260,7 @@ public class AppRepository implements Serializable {
 
     private void getApiPhotosDeAlbum(AlbumModel album){
         ArrayList<FotoModel> fotos = new ArrayList<>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=0f7752ba7f88e148da2b2241725c964d&photoset_id="+album.getId()+"&user_id="+album.getOwner()+"&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=9f876a3b11a076713ccd4c47882e5636&photoset_id="+album.getId()+"&user_id="+album.getOwner()+"&format=json&nojsoncallback=1";
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -318,7 +318,7 @@ public class AppRepository implements Serializable {
 
     private void getApiComent(String id) {
         ArrayList<ComentarioModel> comments = new ArrayList<ComentarioModel>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=0f7752ba7f88e148da2b2241725c964d&photo_id="+id+"&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=9f876a3b11a076713ccd4c47882e5636&photo_id="+id+"&format=json&nojsoncallback=1";
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
