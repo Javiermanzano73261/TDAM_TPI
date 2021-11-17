@@ -57,6 +57,7 @@ public class AppRepository implements Serializable {
         this.mainActivity = activity;
         this.application = application;
         firstTime = true;
+        Toast toast;
         if(obtenerData()){
             Toast.makeText(mainActivity, mainActivity.getString(R.string.updateMessage), Toast.LENGTH_LONG ).show();
         }
@@ -214,7 +215,7 @@ public class AppRepository implements Serializable {
 
     private void getApiData() {
         ArrayList<AlbumModel> albums = new ArrayList<>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=dd412423e14abd8852e2a8e01935932f&user_id=193998612%40N06&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=0f7752ba7f88e148da2b2241725c964d&user_id=193998612%40N06&format=json&nojsoncallback=1";
         //text.setText("");
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -259,7 +260,7 @@ public class AppRepository implements Serializable {
 
     private void getApiPhotosDeAlbum(AlbumModel album){
         ArrayList<FotoModel> fotos = new ArrayList<>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=dd412423e14abd8852e2a8e01935932f&photoset_id="+album.getId()+"&user_id="+album.getOwner()+"&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=0f7752ba7f88e148da2b2241725c964d&photoset_id="+album.getId()+"&user_id="+album.getOwner()+"&format=json&nojsoncallback=1";
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -278,12 +279,12 @@ public class AppRepository implements Serializable {
                                 foto.setWebUrl("https://www.flickr.com/photos/"+album.getOwner()+"/"+foto.getId());
                                 foto.setImageUrl("https://live.staticflickr.com/"+foto.getServer()+"/"+foto.getId()+"_"+foto.getSecret()+"_w.jpg");
 
-                                if(firstTime){
-                                    if(i==0){album.setImagen1(foto.getImageUrl());}
-                                    if(i==1){album.setImagen2(foto.getImageUrl());}
-                                    if(i==2){album.setImagen3(foto.getImageUrl());}
-                                    if(i==3){album.setImagen4(foto.getImageUrl());}
 
+                                    if(firstTime){
+                                        if(i==0){album.setImagen1(foto.getImageUrl());}
+                                        if(i==1){album.setImagen2(foto.getImageUrl());}
+                                        if(i==2){album.setImagen3(foto.getImageUrl());}
+                                        if(i==3){album.setImagen4(foto.getImageUrl());}
                                     getApiComent(foto.getId());
                                 }
                                 foto.setAlbumId(album.getId());
@@ -317,7 +318,7 @@ public class AppRepository implements Serializable {
 
     private void getApiComent(String id) {
         ArrayList<ComentarioModel> comments = new ArrayList<ComentarioModel>();
-        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=dd412423e14abd8852e2a8e01935932f&photo_id="+id+"&format=json&nojsoncallback=1";
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=0f7752ba7f88e148da2b2241725c964d&photo_id="+id+"&format=json&nojsoncallback=1";
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override

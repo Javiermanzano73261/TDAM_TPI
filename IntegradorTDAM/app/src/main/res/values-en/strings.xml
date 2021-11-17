@@ -11,5 +11,5 @@
     <string name="updateMessage">Updating photo sets...</string>
     <string name="errorUpdateMessage">Unable to update photosets</string>
     <string name="subjectEmail">Flickr Photo</string>
-    <string name="textEmail">Hello! Show this picture: </string>
+    <string name="textEmail">Hi! Look at this picture: </string>
 </resources>
